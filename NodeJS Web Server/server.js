@@ -1,7 +1,7 @@
 const path = require('path');
 // Json files for Api calls
-const {bosses} = require('./assets/creatures/enemies/bosses');
-const {minions} = require('./assets/creatures/enemies/minions');
+const {bosses} = require('./game/creatures/enemies/bosses');
+const {minions} = require('./game/creatures/enemies/minions');
 let boss;
 // Express module
 const express = require("express");
