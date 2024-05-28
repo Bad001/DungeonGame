@@ -1,11 +1,13 @@
 const path = require('path');
-// Json files for Api calls
+
+// Jsons for Api calls
 const {bosses} = require('./game/creatures/enemies/bosses');
 const {minions} = require('./game/creatures/enemies/minions');
-let boss;
+
 // Express module
 const express = require("express");
 const app = express();
+
 // Use static folder of the angular project app and get root page
 app.use(express.static(path.join(__dirname,'../DungeonGame/dist/dungeon-game/browser')));
 app.get('/', (req, res) => {

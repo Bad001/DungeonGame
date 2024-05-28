@@ -1,29 +1,39 @@
 class Character {                          // Character is a Superclass
     constructor(name) {                    // every new player starts with the following stats
         this.name = name;
-        hp = 6;
-        speed = 1;
-        damage = 1;
-        ac = 1;
-        range = 2;
+        this.hp = 6;
+        this.speed = 1;
+        this.damage = 1;
+        this.ac = 1;
+        this.range = 2;
+        this.posRow = 5;                   // These two attributes represent the actual position
+        this.posColumn = 1;                // of a Character in the bidimensional array (Map of levels)
+    }
+    get getHp() {
+        return this.hp;
+    }
+    set reduceHp(damage) {
+        return (this.hp -= damage);
     }
 }
 
-class Enemy extends Character {            // Each Enemy has different stats from each other
-    constructor(name, hp, speed, damage, ac, range) {
+class Enemy extends Character {            // Each Enemy has different stats from each other and spawns in different cells
+    constructor(name, hp, speed, damage, ac, range, posRow, posColumn) {
         super(name);
         this.hp = hp;
         this.speed = speed;
         this.damage = damage;
         this.ac = ac;
         this.range = range;
+        this.posRow = posRow;
+        this.posColumn = posColumn;
     }
 }
 
 class Paladin extends Character {           // Once per Dungeon Level you
     constructor(name) {                     // may leave one Energy Dice in
         super(name);                        // place from last turn
-        abilityUsed = false;
+        this.abilityUsed = false;
     }
     useSpecialAbility(energyDiece, stat) {
         let oldEnergyDiece;
@@ -49,7 +59,7 @@ class Paladin extends Character {           // Once per Dungeon Level you
 class Wizard extends Character {            // Once per Dungeon Level you
     constructor(name) {                     // may reroll all Energy dice
         super(name);
-        abilityUsed = false;
+        this.abilityUsed = false;
     }
     useSpecialAbility() {
         if(this.abilityUsed) {
@@ -68,7 +78,7 @@ class Wizard extends Character {            // Once per Dungeon Level you
 class Ranger extends Character {            // Once per Dungeon Level you
     constructor(name) {                     // may assign a die to Range
         super(name);                        // instead of Speed
-        abilityUsed = false;
+        this.abilityUsed = false;
     }
     useSpecialAbility(movementDice) {
         if(this.abilityUsed) {
@@ -85,7 +95,7 @@ class Ranger extends Character {            // Once per Dungeon Level you
 class Barbarian extends Character {         // Once per turn, you may
     constructor(name) {                     // choose to reroll all dice when
         super(name);                        // on 1 Health
-        abilityUsed = false;
+        this.abilityUsed = false;
     }
     useSpecialAbility() {
         if((this.hp != 1) || this.abilityUsed) {
@@ -104,7 +114,7 @@ class Barbarian extends Character {         // Once per turn, you may
 class Rogue extends Character {             // Once per Dungeon Level
     constructor(name) {                     // you may increase the value of
         super(name);                        // all Energy dice rolled by 1
-        abilityUsed = false;
+        this.abilityUsed = false;
     }
     useSpecialAbility(dice) {
         if(this.abilityUsed) {
@@ -123,7 +133,7 @@ class Rogue extends Character {             // Once per Dungeon Level
 class Knight extends Character {            // Once per Dungeon Level
     constructor(name) {                     // you may assign 2 Energy
         super(name);                        // dice of the same value
-        abilityUsed = false;
+        this.abilityUsed = false;
     }
     useSpecialAbility(energyDice1, energyDice2) {
         if(this.abilityUsed) {
@@ -166,7 +176,7 @@ class Cleric extends Character {            // If you roll the same number
 class Necromancer extends Character {
     constructor(name) {                    // Once per Dungeon Level
         super(name);                       // you may choose to lose
-        abilityUsed = false;               // 1 HP to inflict 1 Damage 
+        this.abilityUsed = false;          // 1 HP to inflict 1 Damage 
     }
     useSpecialAbility(enemy) {
         if(this.abilityUsed) {
@@ -180,3 +190,5 @@ class Necromancer extends Character {
         return enemy;
     }
 }
+
+module.exports = {Enemy, Paladin, Wizard, Ranger, Barbarian, Rogue, Knight, Cleric, Necromancer};
