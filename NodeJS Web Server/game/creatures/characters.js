@@ -6,27 +6,49 @@ class Character {                          // Character is a Superclass
         this.damage = 1;
         this.ac = 1;
         this.range = 2;
-        this.posRow = 5;                   // These two attributes represent the actual position
-        this.posColumn = 1;                // of a Character in the bidimensional array (Map of levels)
+        this.position = [4, 0];             // Represent the actual position of a Character in the bidimensional array (Map of levels)
     }
+    // Getters methods
     get getHp() {
         return this.hp;
     }
+    get getPosition() {
+        return this.position;
+    }
+    // Setters methods
+    /**
+     * @param {number} damage
+     */
     set reduceHp(damage) {
-        return (this.hp -= damage);
+        this.hp -= damage;
+    }
+    /**
+     * @param {any[]} position
+     */
+    set move(position) {
+        this.position = [position[0], position[1]];
+    }
+    attack(enemy, damageModifier) {
+        enemy.reduceHp((this.damage + damageModifier));
+        return enemy;
     }
 }
 
 class Enemy extends Character {            // Each Enemy has different stats from each other and spawns in different cells
-    constructor(name, hp, speed, damage, ac, range, posRow, posColumn) {
+    constructor(name, hp, speed, damage, ac, range, position) {
         super(name);
         this.hp = hp;
         this.speed = speed;
         this.damage = damage;
         this.ac = ac;
         this.range = range;
-        this.posRow = posRow;
-        this.posColumn = posColumn;
+        this.position = position;
+    }
+    move() {
+        // to do
+    }
+    attack() {
+        // to do
     }
 }
 
@@ -54,6 +76,22 @@ class Paladin extends Character {           // Once per Dungeon Level you
         }
         return oldEnergyDiece;
     }
+    levelUp(stat) {
+        switch(stat) {
+            case 1: this.speed++;
+                break;
+            case 2: this.damage++;
+                break;
+            case 3: this.ac++;
+                break;
+            case 4: this.range++;
+                break;
+            default: console.log("An Error occured on levelling method");
+        }
+    }
+    rest() {
+        this.hp = 6;
+    }
 }
 
 class Wizard extends Character {            // Once per Dungeon Level you
@@ -73,6 +111,22 @@ class Wizard extends Character {            // Once per Dungeon Level you
         }
         return dice;
     }
+    levelUp(stat) {
+        switch(stat) {
+            case 1: this.speed++;
+                break;
+            case 2: this.damage++;
+                break;
+            case 3: this.ac++;
+                break;
+            case 4: this.range++;
+                break;
+            default: console.log("An Error occured on levelling method");
+        }
+    }
+    rest() {
+        this.hp = 6;
+    }
 }
 
 class Ranger extends Character {            // Once per Dungeon Level you
@@ -89,6 +143,22 @@ class Ranger extends Character {            // Once per Dungeon Level you
             rangeDice = movementDice + this.range;
         }
         return rangeDice;
+    }
+    levelUp(stat) {
+        switch(stat) {
+            case 1: this.speed++;
+                break;
+            case 2: this.damage++;
+                break;
+            case 3: this.ac++;
+                break;
+            case 4: this.range++;
+                break;
+            default: console.log("An Error occured on levelling method");
+        }
+    }
+    rest() {
+        this.hp = 6;
     }
 }
 
@@ -109,6 +179,22 @@ class Barbarian extends Character {         // Once per turn, you may
         }
         return dice;
     }
+    levelUp(stat) {
+        switch(stat) {
+            case 1: this.speed++;
+                break;
+            case 2: this.damage++;
+                break;
+            case 3: this.ac++;
+                break;
+            case 4: this.range++;
+                break;
+            default: console.log("An Error occured on levelling method");
+        }
+    }
+    rest() {
+        this.hp = 6;
+    }
 }
 
 class Rogue extends Character {             // Once per Dungeon Level
@@ -128,6 +214,22 @@ class Rogue extends Character {             // Once per Dungeon Level
         }
         return dice;
     }
+    levelUp(stat) {
+        switch(stat) {
+            case 1: this.speed++;
+                break;
+            case 2: this.damage++;
+                break;
+            case 3: this.ac++;
+                break;
+            case 4: this.range++;
+                break;
+            default: console.log("An Error occured on levelling method");
+        }
+    }
+    rest() {
+        this.hp = 6;
+    }
 }
 
 class Knight extends Character {            // Once per Dungeon Level
@@ -144,6 +246,22 @@ class Knight extends Character {            // Once per Dungeon Level
             energyDice2 = energyDice1;
         }
         return energyDice2;
+    }
+    levelUp(stat) {
+        switch(stat) {
+            case 1: this.speed++;
+                break;
+            case 2: this.damage++;
+                break;
+            case 3: this.ac++;
+                break;
+            case 4: this.range++;
+                break;
+            default: console.log("An Error occured on levelling method");
+        }
+    }
+    rest() {
+        this.hp = 6;
     }
 }
 
@@ -171,6 +289,22 @@ class Cleric extends Character {            // If you roll the same number
         }
         return dice;
     }
+    levelUp(stat) {
+        switch(stat) {
+            case 1: this.speed++;
+                break;
+            case 2: this.damage++;
+                break;
+            case 3: this.ac++;
+                break;
+            case 4: this.range++;
+                break;
+            default: console.log("An Error occured on levelling method");
+        }
+    }
+    rest() {
+        this.hp = 6;
+    }
 }
 
 class Necromancer extends Character {
@@ -188,6 +322,22 @@ class Necromancer extends Character {
             enemy.hp--;
         }
         return enemy;
+    }
+    levelUp(stat) {
+        switch(stat) {
+            case 1: this.speed++;
+                break;
+            case 2: this.damage++;
+                break;
+            case 3: this.ac++;
+                break;
+            case 4: this.range++;
+                break;
+            default: console.log("An Error occured on levelling method");
+        }
+    }
+    rest() {
+        this.hp = 6;
     }
 }
 
