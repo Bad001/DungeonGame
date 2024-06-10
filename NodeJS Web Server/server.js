@@ -8,11 +8,8 @@ const {minions} = require('./game/creatures/enemies/minions');
 const express = require("express");
 const app = express();
 
-// Use static folder of the angular project app and get root page
+// Use static folder of the angular project app
 app.use(express.static(path.join(__dirname,'../DungeonGame/dist/dungeon-game/browser')));
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname,'../DungeonGame/dist/dungeon-game/browser/index.html'));
-});
 
 // Api Routes
 app.get('/api/minions', (req, res) => {
@@ -28,6 +25,11 @@ app.get('/api/bosses', (req, res) => {
 app.get('/api/bosses/:position', (req, res) => {
   const { position } = req.params;
   res.json(bosses[position]);
+});
+
+// All paths at Angular App
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname,'../DungeonGame/dist/dungeon-game/browser/index.html'));
 });
 
 // Server's App is listening on port 3000

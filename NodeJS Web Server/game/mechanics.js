@@ -9,6 +9,8 @@ let player = new character.Wizard('Luca');  // I will need Websockets for this
 let currentLevelIndex = 0;
 let numberOfEnemies = 0;
 let currentLevelDungeon = [];
+let energyDice = [0,0,0];
+let levelUp = 0;
 
 // Game
 enterLevel();
@@ -130,11 +132,14 @@ function enterLevel() {
 }
 
 function energyPhase() {
-    console.log("energy phase");
+    for(let i = 0; i < 3; i++) {
+        energyDice[i] = Math.floor(Math.random() * 6) + 1;
+    }
+    // Here goes a blocking function (The user interacts)
 }
 
 function playerPhase() {
-    console.log("player phase");
+    // Here goes a blocking function (The user interacts)
 }
 
 function enemyMovementPhase() {
@@ -146,5 +151,10 @@ function enemyAttackPhase() {
 }
 
 function levelUpOrRest() {
-    console.log("level up or rest");
+    if(levelUp) {
+        player.levelUp(/*from 1 to 4 to choose the stat*/);
+    }
+    else {
+        player.rest();
+    }
 }
