@@ -1,4 +1,24 @@
 /* You can add global styles to this file, and also import other style files */
 html {
     font-family: "Pixelify Sans", sans-serif;
+    background-image: url("/assets/wallpaper.webp");
+}
+
+h1, p {
+    color: white;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+a:hover .linkLabel {
+    display: none;
+}
+
+a:hover:before {
+    background-color: white;
+    color: black;
+    content: attr(dataOnHover);
 }
