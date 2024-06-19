@@ -4,13 +4,13 @@ html {
     background-image: url("/assets/wallpaper.webp");
 }
 
-h1, p {
+h1, p, a {
     color: white;
 }
 
 a {
     text-decoration: none;
-    color: white;
+    cursor: pointer;
 }
 
 a:hover .linkLabel {

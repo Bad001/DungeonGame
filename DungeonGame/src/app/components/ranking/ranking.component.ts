@@ -2,12 +2,12 @@ import { Component } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-ranking',
   standalone: true,
   imports: [RouterOutlet, RouterModule],
-  templateUrl: './home.component.html',
-  styleUrl: './home.component.css'
+  templateUrl: './ranking.component.html',
+  styleUrl: './ranking.component.css'
 })
-export class HomeComponent {
-  
+export class RankingComponent {
+
 }

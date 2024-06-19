@@ -1,0 +1,25 @@
+div {
+    margin: auto;
+    text-align: center;
+    font-size: 3rem;
+}
+
+ul {
+    list-style-type: none;
+    display: inline-block;
+    text-align: justify;
+    padding-left:0;
+}
+
+li {
+    padding-right: 30px;
+    padding-left: 30px;
+}
+
+ul:hover li {
+    opacity:0.5;
+}
+
+ul li:hover {
+    opacity:1;
+}
