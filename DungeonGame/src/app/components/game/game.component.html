@@ -1,1 +1,19 @@
-<p>game works!</p>
+<div class="title">
+    <h1>Choose your character</h1>  
+</div>
+<div class="character-container" *ngFor="let character of characters">
+    <mat-card class="character-card">
+        <mat-card-header>
+            <mat-card-title>{{character.name}}</mat-card-title>
+        </mat-card-header>
+        <img mat-card-image src="assets/characters/{{character.name}}.jpg" alt="{{character.name}} picture">
+        <mat-card-content>
+            <p>{{character.description}}</p>
+        </mat-card-content>
+        <mat-card-actions>
+            <button dataOnHover=">CONFIRM<" (click)="chooseCharacter(character.name)"><span class="buttonLabel">> CONFIRM <</span></button>
+        </mat-card-actions>
+    </mat-card>
+</div>
+<div class="returnHomeLink"><a routerLink="/" dataOnHover=">Return Home<"><span class="linkLabel">> Return Home <</span></a></div>
+<router-outlet></router-outlet>

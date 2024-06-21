@@ -1,0 +1,54 @@
+.title {
+    margin: auto;
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+.character-container {
+    display: inline-block;
+    padding-right: 50px;
+    padding-left: 50px;
+    padding-bottom: 50px;
+}
+
+mat-card-header {
+    font-size: 2rem;
+    padding-bottom: 10%;
+    margin: auto;
+}
+
+.character-card {
+    max-width: 250px;
+    text-align: center;
+    color: white;
+}
+
+button {
+    font: inherit;
+    margin: auto;
+    background: none;
+    color: white;
+    border-style: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover .buttonLabel {
+    display: none;
+}
+
+button:hover:before {
+    background-color: white;
+    color: black;
+    content: attr(dataOnHover);
+}
+
+.returnHomeLink {
+    margin: auto;
+    font-size: 2rem;
+    text-align: center;
+    padding-bottom: 5%;
+}

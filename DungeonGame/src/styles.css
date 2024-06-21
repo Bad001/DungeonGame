@@ -10,7 +10,6 @@ h1, p, a {
 
 a {
     text-decoration: none;
-    cursor: pointer;
 }
 
 a:hover .linkLabel {
