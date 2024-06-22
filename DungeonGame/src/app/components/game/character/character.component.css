@@ -9,23 +9,3 @@ mat-card-header {
     text-align: center;
     color: white;
 }
-
-button {
-    font: inherit;
-    margin: auto;
-    background: none;
-    color: white;
-    border-style: none;
-    cursor: pointer;
-    font-weight: bold;
-}
-
-button:hover .buttonLabel {
-    display: none;
-}
-
-button:hover:before {
-    background-color: white;
-    color: black;
-    content: attr(dataOnHover);
-}

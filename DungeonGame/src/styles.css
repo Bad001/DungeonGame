@@ -12,11 +12,21 @@ a {
     text-decoration: none;
 }
 
-a:hover .linkLabel {
+button {
+    font: inherit;
+    margin: auto;
+    background: none;
+    color: white;
+    border-style: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+a:hover .linkLabel, button:hover .buttonLabel {
     display: none;
 }
 
-a:hover:before {
+a:hover:before, button:hover:before {
     background-color: white;
     color: black;
     content: attr(dataOnHover);

@@ -13,6 +13,7 @@ import { CharacterComponent } from "./character/character.component";
 })
 export class GameComponent {
 
+  dungeonLevel: number = 0;
   isCharacterBeenChosen: boolean = false;
   character: { name: string, description: string } = { name: '', description: ''} ;
 
@@ -26,6 +27,23 @@ export class GameComponent {
     { "name": 'Rogue', "description": 'Once per Dungeon Level you may increase the value of all Energy dice rolled by 1' },
     { "name": 'Wizard', "description": 'Once per Dungeon Level you may reroll all Energy dice' },
   ];
+
+  dungeon:any [][] = [
+    [
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 1, 0],
+      [0, 0, 0, 0, 0],        // Test
+      [0, 1, 0, 1, 0],
+      [0, 0, 0, 0, 0]
+    ],
+    [
+      [0, 0, 0, 0, 0],
+      [0, 0, 0, 0, 0],
+      [1, 0, 0, 1, 0],        
+      [0, 0, 0, 1, 0],
+      [0, 0, 0, 0, 0]
+    ]
+  ]
 
   listenChildComponent(choiceOfUser: { name: string, description: string, chosen: boolean }) {
     this.isCharacterBeenChosen = choiceOfUser.chosen;

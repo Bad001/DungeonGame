@@ -21,7 +21,6 @@ export class CharacterComponent {
     this.choiceOfUser.name = character.name;
     this.choiceOfUser.description = character.description;
     this.choiceOfUser.chosen = true;
-    this.isSelectionPhase = false;
     this.sendChoice.emit(this.choiceOfUser);
   }
 }
