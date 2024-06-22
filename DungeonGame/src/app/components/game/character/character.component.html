@@ -1,0 +1,12 @@
+<mat-card class="character-card">
+    <mat-card-header>
+        <mat-card-title>{{character.name}}</mat-card-title>
+    </mat-card-header>
+    <img mat-card-image src="assets/characters/{{character.name}}.jpg" alt="{{character.name}} picture">
+    <mat-card-content>
+        <p>{{character.description}}</p>
+    </mat-card-content>
+    <mat-card-actions *ngIf="isSelectionPhase">
+        <button dataOnHover=">CONFIRM<" (click)="chooseCharacter(character)"><span class="buttonLabel">> CONFIRM <</span></button>
+    </mat-card-actions>
+</mat-card>

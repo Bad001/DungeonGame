@@ -1,19 +1,21 @@
 import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
-import {MatButtonModule} from '@angular/material/button';
-import {MatCardModule} from '@angular/material/card';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
+import { CharacterComponent } from "./character/character.component";
 
 @Component({
-  selector: 'app-game',
-  standalone: true,
-  imports: [RouterOutlet, MatCardModule, MatButtonModule, NgFor, RouterModule],
-  templateUrl: './game.component.html',
-  styleUrl: './game.component.css',
-  changeDetection: ChangeDetectionStrategy.OnPush,
+    selector: 'app-game',
+    standalone: true,
+    templateUrl: './game.component.html',
+    styleUrl: './game.component.css',
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    imports: [RouterOutlet, NgFor, RouterModule, NgIf, CharacterComponent]
 })
 export class GameComponent {
-  
+
+  isCharacterBeenChosen: boolean = false;
+  character: { name: string, description: string } = { name: '', description: ''} ;
+
   characters: { name: string, description: string }[] = [
     { "name": 'Barbarian', "description": 'Once per turn, you may choose to reroll all dice when on 1 Health' },
     { "name": 'Cleric', "description": 'If you roll the same number with all Energy dice, you can increase it by 2 (max.6)' },
@@ -25,8 +27,9 @@ export class GameComponent {
     { "name": 'Wizard', "description": 'Once per Dungeon Level you may reroll all Energy dice' },
   ];
 
-  chooseCharacter(characterName: string): string {
-    console.log(characterName);
-    return characterName;
+  listenChildComponent(choiceOfUser: { name: string, description: string, chosen: boolean }) {
+    this.isCharacterBeenChosen = choiceOfUser.chosen;
+    this.character.name = choiceOfUser.name;
+    this.character.description = choiceOfUser.description; 
   }
 }

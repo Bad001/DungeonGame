@@ -1,0 +1,31 @@
+mat-card-header {
+    font-size: 2rem;
+    padding-bottom: 10%;
+    margin: auto;
+}
+
+.character-card {
+    max-width: 250px;
+    text-align: center;
+    color: white;
+}
+
+button {
+    font: inherit;
+    margin: auto;
+    background: none;
+    color: white;
+    border-style: none;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover .buttonLabel {
+    display: none;
+}
+
+button:hover:before {
+    background-color: white;
+    color: black;
+    content: attr(dataOnHover);
+}
