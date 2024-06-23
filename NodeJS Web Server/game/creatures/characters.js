@@ -32,6 +32,22 @@ class Character {                          // Character is a Superclass
         enemy.reduceHp((this.damage + damageModifier));
         return enemy;
     }
+    levelUp(stat) {
+        switch(stat) {
+            case 1: this.speed++;
+                break;
+            case 2: this.damage++;
+                break;
+            case 3: this.ac++;
+                break;
+            case 4: this.range++;
+                break;
+            default: console.log("An Error occured on levelling method");
+        }
+    }
+    rest() {
+        this.hp = 6;
+    }
 }
 
 class Enemy extends Character {            // Each Enemy has different stats from each other and spawns in different cells
@@ -50,6 +66,8 @@ class Enemy extends Character {            // Each Enemy has different stats fro
     attack() {
         // to do
     }
+    levelUp() {}
+    rest() {}
 }
 
 class Paladin extends Character {           // Once per Dungeon Level you
@@ -76,22 +94,6 @@ class Paladin extends Character {           // Once per Dungeon Level you
         }
         return oldEnergyDiece;
     }
-    levelUp(stat) {
-        switch(stat) {
-            case 1: this.speed++;
-                break;
-            case 2: this.damage++;
-                break;
-            case 3: this.ac++;
-                break;
-            case 4: this.range++;
-                break;
-            default: console.log("An Error occured on levelling method");
-        }
-    }
-    rest() {
-        this.hp = 6;
-    }
 }
 
 class Wizard extends Character {            // Once per Dungeon Level you
@@ -111,22 +113,6 @@ class Wizard extends Character {            // Once per Dungeon Level you
         }
         return dice;
     }
-    levelUp(stat) {
-        switch(stat) {
-            case 1: this.speed++;
-                break;
-            case 2: this.damage++;
-                break;
-            case 3: this.ac++;
-                break;
-            case 4: this.range++;
-                break;
-            default: console.log("An Error occured on levelling method");
-        }
-    }
-    rest() {
-        this.hp = 6;
-    }
 }
 
 class Ranger extends Character {            // Once per Dungeon Level you
@@ -143,22 +129,6 @@ class Ranger extends Character {            // Once per Dungeon Level you
             rangeDice = movementDice + this.range;
         }
         return rangeDice;
-    }
-    levelUp(stat) {
-        switch(stat) {
-            case 1: this.speed++;
-                break;
-            case 2: this.damage++;
-                break;
-            case 3: this.ac++;
-                break;
-            case 4: this.range++;
-                break;
-            default: console.log("An Error occured on levelling method");
-        }
-    }
-    rest() {
-        this.hp = 6;
     }
 }
 
@@ -179,22 +149,6 @@ class Barbarian extends Character {         // Once per turn, you may
         }
         return dice;
     }
-    levelUp(stat) {
-        switch(stat) {
-            case 1: this.speed++;
-                break;
-            case 2: this.damage++;
-                break;
-            case 3: this.ac++;
-                break;
-            case 4: this.range++;
-                break;
-            default: console.log("An Error occured on levelling method");
-        }
-    }
-    rest() {
-        this.hp = 6;
-    }
 }
 
 class Rogue extends Character {             // Once per Dungeon Level
@@ -214,22 +168,6 @@ class Rogue extends Character {             // Once per Dungeon Level
         }
         return dice;
     }
-    levelUp(stat) {
-        switch(stat) {
-            case 1: this.speed++;
-                break;
-            case 2: this.damage++;
-                break;
-            case 3: this.ac++;
-                break;
-            case 4: this.range++;
-                break;
-            default: console.log("An Error occured on levelling method");
-        }
-    }
-    rest() {
-        this.hp = 6;
-    }
 }
 
 class Knight extends Character {            // Once per Dungeon Level
@@ -246,22 +184,6 @@ class Knight extends Character {            // Once per Dungeon Level
             energyDice2 = energyDice1;
         }
         return energyDice2;
-    }
-    levelUp(stat) {
-        switch(stat) {
-            case 1: this.speed++;
-                break;
-            case 2: this.damage++;
-                break;
-            case 3: this.ac++;
-                break;
-            case 4: this.range++;
-                break;
-            default: console.log("An Error occured on levelling method");
-        }
-    }
-    rest() {
-        this.hp = 6;
     }
 }
 
@@ -289,22 +211,6 @@ class Cleric extends Character {            // If you roll the same number
         }
         return dice;
     }
-    levelUp(stat) {
-        switch(stat) {
-            case 1: this.speed++;
-                break;
-            case 2: this.damage++;
-                break;
-            case 3: this.ac++;
-                break;
-            case 4: this.range++;
-                break;
-            default: console.log("An Error occured on levelling method");
-        }
-    }
-    rest() {
-        this.hp = 6;
-    }
 }
 
 class Necromancer extends Character {
@@ -322,22 +228,6 @@ class Necromancer extends Character {
             enemy.hp--;
         }
         return enemy;
-    }
-    levelUp(stat) {
-        switch(stat) {
-            case 1: this.speed++;
-                break;
-            case 2: this.damage++;
-                break;
-            case 3: this.ac++;
-                break;
-            case 4: this.range++;
-                break;
-            default: console.log("An Error occured on levelling method");
-        }
-    }
-    rest() {
-        this.hp = 6;
     }
 }
 

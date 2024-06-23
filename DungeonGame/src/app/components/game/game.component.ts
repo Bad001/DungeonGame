@@ -2,6 +2,8 @@ import { ChangeDetectionStrategy, Component } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { NgFor, NgIf } from '@angular/common';
 import { CharacterComponent } from "./character/character.component";
+import { ReplaceNumberWithDiceDirective } from '../../directives/replace-number-with-dice.directive';
+import { RenderGameMapDirective } from '../../directives/render-game-map.directive';
 
 @Component({
     selector: 'app-game',
@@ -9,8 +11,9 @@ import { CharacterComponent } from "./character/character.component";
     templateUrl: './game.component.html',
     styleUrl: './game.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [RouterOutlet, NgFor, RouterModule, NgIf, CharacterComponent]
+    imports: [RouterOutlet, NgFor, RouterModule, NgIf, CharacterComponent, ReplaceNumberWithDiceDirective, RenderGameMapDirective]
 })
+
 export class GameComponent {
 
   dungeonLevel: number = 0;
@@ -48,6 +51,16 @@ export class GameComponent {
   listenChildComponent(choiceOfUser: { name: string, description: string, chosen: boolean }) {
     this.isCharacterBeenChosen = choiceOfUser.chosen;
     this.character.name = choiceOfUser.name;
-    this.character.description = choiceOfUser.description; 
+    this.character.description = choiceOfUser.description;
+  }
+
+  testDirective() {
+    console.log("button clicked use special");
+    if(this.dungeonLevel === 1) {
+      this.dungeonLevel = 0;
+    }
+    else {
+      this.dungeonLevel = 1;
+    }
   }
 }

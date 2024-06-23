@@ -73,7 +73,6 @@ connection.query('SELECT 1 + 1 AS solution', (err, rows, fields) => {
 
 connection.end()
 
-
 // Server's App is listening on port 3000
 app.listen(3000, () => {
   console.log("Server is up");

@@ -4,6 +4,14 @@ html {
     background-image: url("/assets/wallpaper.webp");
 }
 
+.center {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    margin:auto;
+}
+
 h1, p, a {
     color: white;
 }

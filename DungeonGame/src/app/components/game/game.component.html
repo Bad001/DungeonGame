@@ -2,8 +2,10 @@
     <div class="title">
         <h1>Choose your character</h1>  
     </div>
-    <div class="character-container" *ngFor="let character of characters">
-        <app-character [character]="character" (sendChoice)="listenChildComponent($event)"></app-character>
+    <div class="center">
+        <div class="character-container" *ngFor="let character of characters">
+            <app-character [character]="character" (sendChoice)="listenChildComponent($event)"></app-character>
+        </div>
     </div>
     <div class="returnHomeLink"><a routerLink="/" dataOnHover=">Return Home<"><span class="linkLabel">> Return Home <</span></a></div>
 </ng-container>
@@ -11,15 +13,17 @@
     <div class="title">
         <h1 class="levelCounter">Dungeon Level {{dungeonLevel+1}}</h1>
     </div>
-    <div class="container">
+    <div class="center">
         <div class="game-section">
             <app-character [character]="character" [isSelectionPhase]="!isCharacterBeenChosen"></app-character>
-            <p class="energyDiceResults">0 0 0</p>
+            <div class="center">
+                <button dataOnHover=">Use Ability<" (click)="testDirective()"><span class="buttonLabel">> Use Ability <</span></button>
+            </div>
         </div>
         <div class="game-section">
             <table class="dungeon">
                 <tr *ngFor="let row of dungeon[dungeonLevel]; index as i">
-                    <td *ngFor="let column of dungeon[dungeonLevel]; index as j">{{dungeon[0][i][j]}}</td>
+                    <td *ngFor="let column of dungeon[dungeonLevel]; index as j" appRenderGameMap>{{dungeon[dungeonLevel][i][j]}}</td>
                 </tr>
             </table>
             <table class="stats">
@@ -28,33 +32,40 @@
                     <th>HP</th>
                     <th>MOV</th>
                     <th>DMG</th>
-                    <th>AC</th>
+                    <th>DEF</th>
                     <th>RNG</th>
                 </tr>
                 <tr>
                     <td>Giant Spider</td>
-                    <td>2</td>
-                    <td>5</td>
-                    <td>4</td>
-                    <td>4</td>
-                    <td>3</td>
+                    <td appReplaceNumberWithDice>2</td>
+                    <td appReplaceNumberWithDice>5</td>
+                    <td appReplaceNumberWithDice>4</td>
+                    <td appReplaceNumberWithDice>4</td>
+                    <td appReplaceNumberWithDice>3</td>
                 </tr>
                 <tr>
                     <td>Player</td>
-                    <td>6</td>
-                    <td>1</td>
-                    <td>1</td>
-                    <td>1</td>
-                    <td>2</td>
+                    <td appReplaceNumberWithDice>6</td>
+                    <td appReplaceNumberWithDice>1</td>
+                    <td appReplaceNumberWithDice>1</td>
+                    <td appReplaceNumberWithDice>1</td>
+                    <td appReplaceNumberWithDice>2</td>
                 </tr>
             </table>
         </div>
         <div class="game-section">
+            <h2>Energy Phase</h2>
+            <div class="energyDiceResults">
+                <p>Results:
+                    <button appReplaceNumberWithDice>6</button>
+                    <button appReplaceNumberWithDice>3</button>
+                    <button appReplaceNumberWithDice>5</button>
+                </p>
+            </div>
             <h2>Actions</h2>
             <ul>
                 <li><button dataOnHover=">Move<"><span class="buttonLabel">> Move <</span></button></li>
                 <li><button dataOnHover=">Attack<"><span class="buttonLabel">> Attack <</span></button></li>
-                <li><button dataOnHover=">Use Special Ability<"><span class="buttonLabel">> Use Special Ability <</span></button></li>
                 <li><button dataOnHover=">End Turn<"><span class="buttonLabel">> End Turn <</span></button></li>
             </ul>
         </div>
