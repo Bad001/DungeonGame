@@ -1,17 +1,17 @@
+:host {
+    --mov: lightskyblue;
+    --dmg: red;
+    --def: cornflowerblue;
+}
+
 .title {
     text-align: center;
     font-size: 2rem;
 }
 
 h2 {
-    text-align: center;
     color: white;
     font-size: 3rem;
-}
-
-.energyDiceResults {
-    font-size: 2rem;
-    text-align: center;
 }
 
 .levelCounter {
@@ -43,13 +43,13 @@ h2 {
     display: inline-block;
     vertical-align: middle;
     margin: auto;
+    text-align: center;
 }
 
 .dungeon, .dungeon td {
     border: 1px solid black;
     background-color: white;
     border-collapse: collapse;
-    text-align: center;
     font-size: 3rem;
 }
 
@@ -60,7 +60,11 @@ h2 {
 
 .stats, .stats td{
     color: white;
-    text-align: center;
+    font-size: 40px;
+    border-collapse: collapse;
+}
+
+.stats th, .tableEntityName {
     font-size: 20px;
 }
 
@@ -69,10 +73,33 @@ h2 {
     height: 10px;
 }
 
+.stats tr td:nth-child(2), .hp {
+    color:lime;
+}
+
+.stats tr td:nth-child(3), .mov {
+    color: var(--mov);
+}
+
+.stats tr td:nth-child(4), .dmg {
+    color: var(--dmg);
+}
+
+.stats tr td:nth-child(5), .def {
+    color: var(--def);
+}
+
+.stats tr td:nth-child(6), .rng {
+    color:yellow;
+}
+
+.tableDivider {
+    border-bottom: 5px solid white;
+}
+
 ul {
     list-style-type: none;
     padding-left: 0;
-    text-align: center;
 }
 
 li {
@@ -82,4 +109,39 @@ li {
 
 span, button {
     font-size: 2rem;
+}
+
+.energyDiceResults button {
+    font-size: 6rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 0;
+    margin-bottom: 0;
+    font-weight: normal;
+}
+
+input[type="radio"]{
+    visibility: hidden;
+}
+
+label {
+    cursor: pointer;
+    font-size: 2rem;
+    color: white;
+    font-weight: bold;
+}
+
+input:checked + label {
+    background-color: white;
+    color: black;
+}
+
+a.giveUp:hover:before {
+    background-color: red;
+    color: white;
+    content: attr(dataOnHover);
+}
+
+.confirmDiceButton {
+    margin-top: 1rem;   
 }

@@ -14,13 +14,15 @@
         <h1 class="levelCounter">Dungeon Level {{dungeonLevel+1}}</h1>
     </div>
     <div class="center">
-        <div class="game-section">
+        <div class="game-section center">
             <app-character [character]="character" [isSelectionPhase]="!isCharacterBeenChosen"></app-character>
-            <div class="center">
-                <button dataOnHover=">Use Ability<" (click)="testDirective()"><span class="buttonLabel">> Use Ability <</span></button>
-            </div>
+            <ng-container *ngIf="isPlayerPhase">
+                <div>
+                    <button dataOnHover=">Use Ability<"><span class="buttonLabel">> Use Ability <</span></button>
+                </div>
+            </ng-container>
         </div>
-        <div class="game-section">
+        <div class="game-section center">
             <table class="dungeon">
                 <tr *ngFor="let row of dungeon[dungeonLevel]; index as i">
                     <td *ngFor="let column of dungeon[dungeonLevel]; index as j" appRenderGameMap>{{dungeon[dungeonLevel][i][j]}}</td>
@@ -28,46 +30,55 @@
             </table>
             <table class="stats">
                 <tr>
-                    <th>2</th>
-                    <th>HP</th>
-                    <th>MOV</th>
-                    <th>DMG</th>
-                    <th>DEF</th>
-                    <th>RNG</th>
+                    <th></th>
+                    <th class="hp">HP</th>
+                    <th class="mov">MOV</th>
+                    <th class="dmg">DMG</th>
+                    <th class="def">DEF</th>
+                    <th class="rng">RNG</th>
                 </tr>
                 <tr>
-                    <td>Giant Spider</td>
-                    <td appReplaceNumberWithDice>2</td>
-                    <td appReplaceNumberWithDice>5</td>
-                    <td appReplaceNumberWithDice>4</td>
-                    <td appReplaceNumberWithDice>4</td>
-                    <td appReplaceNumberWithDice>3</td>
+                    <td class="tableDivider">Giant Spider</td>
+                    <td class="tableDivider">2</td>
+                    <td class="tableDivider">5</td>
+                    <td class="tableDivider">4</td>
+                    <td class="tableDivider">4</td>
+                    <td class="tableDivider">3</td>
                 </tr>
                 <tr>
                     <td>Player</td>
-                    <td appReplaceNumberWithDice>6</td>
-                    <td appReplaceNumberWithDice>1</td>
-                    <td appReplaceNumberWithDice>1</td>
-                    <td appReplaceNumberWithDice>1</td>
-                    <td appReplaceNumberWithDice>2</td>
+                    <td>6</td>
+                    <td *ngFor="let stat of assignedStats">{{stat+1}}</td>
+                    <td>2</td>
                 </tr>
             </table>
         </div>
-        <div class="game-section">
-            <h2>Energy Phase</h2>
-            <div class="energyDiceResults">
-                <p>Results:
-                    <button appReplaceNumberWithDice>6</button>
-                    <button appReplaceNumberWithDice>3</button>
-                    <button appReplaceNumberWithDice>5</button>
-                </p>
-            </div>
-            <h2>Actions</h2>
-            <ul>
-                <li><button dataOnHover=">Move<"><span class="buttonLabel">> Move <</span></button></li>
-                <li><button dataOnHover=">Attack<"><span class="buttonLabel">> Attack <</span></button></li>
-                <li><button dataOnHover=">End Turn<"><span class="buttonLabel">> End Turn <</span></button></li>
-            </ul>
+        <div class="game-section center">
+            <a routerLink="/" class="linkLabel giveUp" dataOnHover=">Give Up<"><span class="linkLabel">> Give Up <</span></a>
+            <ng-container *ngIf="isEnergyPhase">
+                <h2>Energy Phase</h2>
+                    <div class="energyDiceResults">
+                        <button *ngFor="let die of energyDice; index as i" appReplaceNumberWithDice (click)="assignDie(die)">{{die}}</button>
+                    </div>
+                    <ng-container *ngIf="isDieButtonPressed">
+                        <div>
+                            <input type="radio" id="stat1" name="stats" (click)="radioChecked('mov')"/><label for='stat1'>MOV</label>
+                            <input type="radio" id="stat2" name="stats" (click)="radioChecked('dmg')"/><label for='stat2'>DMG</label>
+                            <input type="radio" id="stat3" name="stats" (click)="radioChecked('def')"/><label for='stat3'>DEF</label>
+                        </div>
+                        <div>
+                            <button class="confirmDiceButton" dataOnHover=">CONFIRM<" (click)="confirmStat()"><span class="buttonLabel">> CONFIRM <</span></button>
+                        </div>
+                    </ng-container>
+            </ng-container>
+            <ng-container *ngIf="isPlayerPhase">
+                <h2>Actions</h2>
+                <ul>
+                    <li><button dataOnHover=">Move<"><span class="buttonLabel">> Move <</span></button></li>
+                    <li><button dataOnHover=">Attack<"><span class="buttonLabel">> Attack <</span></button></li>
+                    <li><button dataOnHover=">End Turn<"><span class="buttonLabel">> End Turn <</span></button></li>
+                </ul>
+            </ng-container>
         </div>
     </div>
 </ng-container>

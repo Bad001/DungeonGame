@@ -4,6 +4,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { CharacterComponent } from "./character/character.component";
 import { ReplaceNumberWithDiceDirective } from '../../directives/replace-number-with-dice.directive';
 import { RenderGameMapDirective } from '../../directives/render-game-map.directive';
+import { FormsModule } from '@angular/forms';
 
 @Component({
     selector: 'app-game',
@@ -11,14 +12,21 @@ import { RenderGameMapDirective } from '../../directives/render-game-map.directi
     templateUrl: './game.component.html',
     styleUrl: './game.component.css',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [RouterOutlet, NgFor, RouterModule, NgIf, CharacterComponent, ReplaceNumberWithDiceDirective, RenderGameMapDirective]
+    imports: [RouterOutlet, NgFor, RouterModule, NgIf, CharacterComponent, ReplaceNumberWithDiceDirective, RenderGameMapDirective, FormsModule]
 })
 
 export class GameComponent {
-
+ 
   dungeonLevel: number = 0;
   isCharacterBeenChosen: boolean = false;
-  character: { name: string, description: string } = { name: '', description: ''} ;
+  isEnergyPhase: boolean = true;
+  isPlayerPhase: boolean = false;
+  isDieButtonPressed: boolean = false;
+  character: { name: string, description: string } = { name: '', description: ''};
+  energyDice = [4,6,1];
+  assignedStats = [0,0,0];
+  die: number = 0;
+  stat: string = '';
 
   characters: { name: string, description: string }[] = [
     { "name": 'Barbarian', "description": 'Once per turn, you may choose to reroll all dice when on 1 Health' },
@@ -54,13 +62,42 @@ export class GameComponent {
     this.character.description = choiceOfUser.description;
   }
 
-  testDirective() {
-    console.log("button clicked use special");
-    if(this.dungeonLevel === 1) {
-      this.dungeonLevel = 0;
+  assignDie(die: number) {
+    this.isDieButtonPressed = true;
+    this.die = die;
+  }
+
+  radioChecked(radioValue: string) {
+    this.stat = radioValue;
+    switch(radioValue) {
+      case 'mov':
+        if(this.assignedStats[0] != 0) {
+          this.energyDice.push(this.assignedStats[0]);
+        }
+        this.assignedStats[0] = this.die;
+        break;
+      case 'dmg':
+        if(this.assignedStats[1] != 0) {
+          this.energyDice.push(this.assignedStats[1]);
+        }
+        this.assignedStats[1] = this.die;
+        break;
+      case 'def':
+        if(this.assignedStats[2] != 0) {
+          this.energyDice.push(this.assignedStats[2]);
+        }
+        this.assignedStats[2] = this.die;
+        break;
+      default: console.log(radioValue + " is not valid!");
     }
-    else {
-      this.dungeonLevel = 1;
+    let index = this.energyDice.indexOf(this.die);
+    if (index > -1) {
+      this.energyDice.splice(index, 1);
     }
+    this.die = 0;
+  }
+
+  confirmStat() {
+    console.log(this.assignedStats);
   }
 }

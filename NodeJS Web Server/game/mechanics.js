@@ -4,13 +4,20 @@ const {minions} = require('./creatures/enemies/minions');
 const {dungeon} = require('./dungeon');
 const character = require('./creatures/characters');
 
-// Variables
+// Variables / Object
 let player = new character.Wizard('Luca');  // I will need Websockets for this
-let currentLevelIndex = 0;
-let numberOfEnemies = 0;
 let currentLevelDungeon = [];
 let energyDice = [0,0,0];
-let levelUp = 0;
+let movDie = 0;
+let dmgDie = 0;
+let defDie = 0;
+// Indexes
+let currentLevelIndex = 0;
+let numberOfEnemies = 0;
+// Flags
+let levelUp = false;
+let isEnergyPhase = false;
+let isPlayerPhase = false;
 
 // Game
 enterLevel();
@@ -30,7 +37,7 @@ do {
 currentLevelIndex === 12 ? console.log("You Win!") : console.log("You Lose!");
 
 // Functions
-function enterLevel() {
+function enterLevel() { // Presets function
     switch (currentLevelIndex) {
         case 0:
             currentLevelDungeon = dungeon[0];
@@ -135,10 +142,14 @@ function energyPhase() {
     for(let i = 0; i < 3; i++) {
         energyDice[i] = Math.floor(Math.random() * 6) + 1;
     }
+    isPlayerPhase = false;
+    isEnergyPhase = true;
     // Here goes a blocking function (The user interacts)
 }
 
 function playerPhase() {
+    isEnergyPhase = false;
+    isPlayerPhase = true;
     // Here goes a blocking function (The user interacts)
 }
 
