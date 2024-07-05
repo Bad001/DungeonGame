@@ -143,5 +143,9 @@ a.giveUp:hover:before {
 }
 
 .confirmDiceButton {
-    margin-top: 1rem;   
+    margin-top: 1rem;
+}
+
+button.energyDie:focus {
+    color: red;
 }

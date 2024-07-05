@@ -20,7 +20,6 @@ export class GameComponent {
   dungeonLevel: number = 0;
   isCharacterBeenChosen: boolean = false;
   isEnergyPhase: boolean = true;
-  isPlayerPhase: boolean = false;
   isDieButtonPressed: boolean = false;
   character: { name: string, description: string } = { name: '', description: ''};
   energyDice = [4,6,1];
