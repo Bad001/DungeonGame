@@ -22,10 +22,9 @@ export class GameComponent {
   isEnergyPhase: boolean = true;
   isDieButtonPressed: boolean = false;
   character: { name: string, description: string } = { name: '', description: ''};
-  energyDice = [4,6,1];
+  energyDice = [3,4,5];
   assignedStats = [0,0,0];
   die: number = 0;
-  stat: string = '';
 
   characters: { name: string, description: string }[] = [
     { "name": 'Barbarian', "description": 'Once per turn, you may choose to reroll all dice when on 1 Health' },
@@ -40,11 +39,11 @@ export class GameComponent {
 
   dungeon:any [][] = [
     [
-      [0, 0, 0, 0, 0],
+      [0, 0, 0, 2, 0],
       [0, 0, 0, 1, 0],
-      [0, 0, 0, 0, 0],        // Test
+      [0, 0, 0, 0, 2],        // Test
       [0, 1, 0, 1, 0],
-      [0, 0, 0, 0, 0]
+      [6, 0, 0, 0, 0]
     ],
     [
       [0, 0, 0, 0, 0],
@@ -66,32 +65,14 @@ export class GameComponent {
     this.die = die;
   }
 
-  radioChecked(radioValue: string) {
-    this.stat = radioValue;
-    switch(radioValue) {
-      case 'mov':
-        if(this.assignedStats[0] != 0) {
-          this.energyDice.push(this.assignedStats[0]);
-        }
-        this.assignedStats[0] = this.die;
-        break;
-      case 'dmg':
-        if(this.assignedStats[1] != 0) {
-          this.energyDice.push(this.assignedStats[1]);
-        }
-        this.assignedStats[1] = this.die;
-        break;
-      case 'def':
-        if(this.assignedStats[2] != 0) {
-          this.energyDice.push(this.assignedStats[2]);
-        }
-        this.assignedStats[2] = this.die;
-        break;
-      default: console.log(radioValue + " is not valid!");
+  radioChecked(radioValue: number) {
+    if(this.assignedStats[radioValue] != 0) {
+      this.energyDice.push(this.assignedStats[radioValue]);
     }
+    this.assignedStats[radioValue] = this.die;
     let index = this.energyDice.indexOf(this.die);
-    if (index > -1) {
-      this.energyDice.splice(index, 1);
+    if (index > -1) {                               // check if selected die is present in energyDice array
+      this.energyDice.splice(index, 1);             // remove the selected die from energyDice array
     }
     this.die = 0;
   }

@@ -7,14 +7,16 @@ import { Directive, ElementRef } from '@angular/core';
 export class RenderGameMapDirective {
   constructor(private element: ElementRef) {}
 
-  ngAfterViewInit() {
-    if(this.element.nativeElement.innerHTML == '0') {
-      this.element.nativeElement.style.backgroundColor = 'DarkGoldenRod'
+  ngAfterContentInit() {
+    if(this.element.nativeElement.innerHTML == '1') {
+      this.element.nativeElement.style.backgroundColor = 'DimGrey';
       this.element.nativeElement.innerHTML = '';
     }
     else {
-      this.element.nativeElement.style.backgroundColor = 'DimGrey'
-      this.element.nativeElement.innerHTML = '';
+      this.element.nativeElement.style.backgroundColor = 'DarkGoldenRod';
+      if(this.element.nativeElement.innerHTML == '0') {
+        this.element.nativeElement.innerHTML = '';
+      }
     }
   }
 }

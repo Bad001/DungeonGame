@@ -16,7 +16,7 @@
     <div class="center">
         <div class="game-section center">
             <app-character [character]="character" [isSelectionPhase]="!isCharacterBeenChosen"></app-character>
-            <ng-container *ngIf="!isEnergyPhase">
+            <ng-container *ngIf="isEnergyPhase">
                 <div>
                     <button dataOnHover=">Use Ability<"><span class="buttonLabel">> Use Ability <</span></button>
                 </div>
@@ -25,7 +25,7 @@
         <div class="game-section center">
             <table class="dungeon">
                 <tr *ngFor="let row of dungeon[dungeonLevel]; index as i">
-                    <td *ngFor="let column of dungeon[dungeonLevel]; index as j" appRenderGameMap>{{dungeon[dungeonLevel][i][j]}}</td>
+                    <td *ngFor="let column of dungeon[dungeonLevel]; index as j" appReplaceNumberWithDice appRenderGameMap>{{dungeon[dungeonLevel][i][j]}}</td>
                 </tr>
             </table>
             <table class="stats">
@@ -62,9 +62,9 @@
                     </div>
                     <ng-container *ngIf="isDieButtonPressed">
                         <div>
-                            <input type="radio" id="stat1" name="stats" (click)="radioChecked('mov')"/><label for='stat1'>MOV</label>
-                            <input type="radio" id="stat2" name="stats" (click)="radioChecked('dmg')"/><label for='stat2'>DMG</label>
-                            <input type="radio" id="stat3" name="stats" (click)="radioChecked('def')"/><label for='stat3'>DEF</label>
+                            <input type="radio" id="stat1" name="stats" (click)="radioChecked(0)"/><label for='stat1'>MOV</label>
+                            <input type="radio" id="stat2" name="stats" (click)="radioChecked(1)"/><label for='stat2'>DMG</label>
+                            <input type="radio" id="stat3" name="stats" (click)="radioChecked(2)"/><label for='stat3'>DEF</label>
                         </div>
                         <ng-container *ngIf="!assignedStats.includes(0)">
                             <div>

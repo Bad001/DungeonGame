@@ -29,7 +29,7 @@ export class ReplaceNumberWithDiceDirective {
         break;
       case '6': this.element.nativeElement.innerHTML = Dice.Six;
         break;
-      default: console.log("ReplaceNumberWithDiceDirective: The number of the element is not valid!");
+      default: if(this.element.nativeElement.innerHTML != '') console.log("ReplaceNumberWithDiceDirective: The number of the element is not valid!");
     }
   }
 }
