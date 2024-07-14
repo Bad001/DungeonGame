@@ -15,7 +15,7 @@ export class CharacterComponent {
   @Input() isSelectionPhase: boolean = true;
   @Output() sendChoice = new EventEmitter<{ name: string, description: string, chosen: boolean }>();
   
-  choiceOfUser: { name: string, description: string, chosen: boolean } = { name: '', description: '', chosen: false};
+  private choiceOfUser: { name: string, description: string, chosen: boolean } = { name: '', description: '', chosen: false};
 
   chooseCharacter(character: { name: string, description: string }): void {
     this.choiceOfUser.name = character.name;

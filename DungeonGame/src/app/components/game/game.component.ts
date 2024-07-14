@@ -5,6 +5,7 @@ import { CharacterComponent } from "./character/character.component";
 import { ReplaceNumberWithDiceDirective } from '../../directives/replace-number-with-dice.directive';
 import { RenderGameMapDirective } from '../../directives/render-game-map.directive';
 import { FormsModule } from '@angular/forms';
+import { GameService } from '../../services/game.service';
 
 @Component({
     selector: 'app-game',
@@ -17,42 +18,19 @@ import { FormsModule } from '@angular/forms';
 
 export class GameComponent {
  
+  constructor(private GameService: GameService) {}
+
   dungeonLevel: number = 0;
   isCharacterBeenChosen: boolean = false;
   isEnergyPhase: boolean = true;
   isDieButtonPressed: boolean = false;
   character: { name: string, description: string } = { name: '', description: ''};
-  energyDice = [3,4,5];
   assignedStats = [0,0,0];
   die: number = 0;
-
-  characters: { name: string, description: string }[] = [
-    { "name": 'Barbarian', "description": 'Once per turn, you may choose to reroll all dice when on 1 Health' },
-    { "name": 'Cleric', "description": 'If you roll the same number with all Energy dice, you can increase it by 2 (max.6)' },
-    { "name": 'Knight', "description": 'Once per Dungeon Level you may assign 2 Energy dice of the same value' },
-    { "name": 'Necromancer', "description": 'Once per Dungeon Level you may choose to lose 1 HP to inflict 1 Damage' },
-    { "name": 'Paladin', "description": 'Once per Dungeon Level you may leave one Energy Dice in place from last turn' },
-    { "name": 'Ranger', "description": 'Once per Dungeon Level you may assign a die to Range instead of Speed' },
-    { "name": 'Rogue', "description": 'Once per Dungeon Level you may increase the value of all Energy dice rolled by 1' },
-    { "name": 'Wizard', "description": 'Once per Dungeon Level you may reroll all Energy dice' },
-  ];
-
-  dungeon:any [][] = [
-    [
-      [0, 0, 0, 2, 0],
-      [0, 0, 0, 1, 0],
-      [0, 0, 0, 0, 2],        // Test
-      [0, 1, 0, 1, 0],
-      [6, 0, 0, 0, 0]
-    ],
-    [
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [1, 0, 0, 1, 0],        
-      [0, 0, 0, 1, 0],
-      [0, 0, 0, 0, 0]
-    ]
-  ]
+  coordinates: [number, number] = [0,0];
+  energyDice: [number, number, number] = this.GameService.getEnergyDice();
+  characters: { name: string, description: string }[] = this.GameService.getCharacters();
+  dungeon:any [][] = this.GameService.getDungeon();
 
   listenChildComponent(choiceOfUser: { name: string, description: string, chosen: boolean }) {
     this.isCharacterBeenChosen = choiceOfUser.chosen;
@@ -78,6 +56,12 @@ export class GameComponent {
   }
 
   confirmStat() {
+    this.isEnergyPhase = false;
     console.log(this.assignedStats);
+  }
+
+  setCoordinates(coordinates: [number, number]) {
+    this.coordinates = coordinates;
+    console.log(coordinates);
   }
 }

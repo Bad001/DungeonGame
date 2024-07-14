@@ -66,7 +66,7 @@ class Enemy extends Character {            // Each Enemy has different stats fro
     attack() {
         // to do
     }
-    levelUp() {}
+    levelUp() {}    // Overriding those two methods because enemies doesn't level up or rest
     rest() {}
 }
 
