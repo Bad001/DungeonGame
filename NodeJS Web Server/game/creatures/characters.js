@@ -23,7 +23,7 @@ class Character {                          // Character is a Superclass
         this.hp -= damage;
     }
     /**
-     * @param {any[]} position
+     * @param {[number, number]} position
      */
     set move(position) {
         this.position = [position[0], position[1]];

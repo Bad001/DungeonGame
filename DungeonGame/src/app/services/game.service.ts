@@ -1,9 +1,13 @@
 import { Injectable } from '@angular/core';
+import { io } from 'socket.io-client';
 
 @Injectable({
   providedIn: 'root'
 })
 export class GameService {
+
+  private socket: any;
+
   constructor() { }
 
   private energyDice: [number, number, number] = [3,4,5];
@@ -17,6 +21,17 @@ export class GameService {
     { "name": 'Rogue', "description": 'Once per Dungeon Level you may increase the value of all Energy dice rolled by 1' },
     { "name": 'Wizard', "description": 'Once per Dungeon Level you may reroll all Energy dice' },
   ];
+
+  setupSocketConnection() {
+    this.socket = io();
+  }
+
+  disconnect() {
+    if (this.socket) {
+      this.socket.disconnect();
+    }
+  }
+
   private dungeon:any [][] = [
     [
       [0, 0, 0, 2, 0],

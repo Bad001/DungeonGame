@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { NgFor, NgIf } from '@angular/common';
 import { CharacterComponent } from "./character/character.component";
@@ -16,9 +16,17 @@ import { GameService } from '../../services/game.service';
     imports: [RouterOutlet, NgFor, RouterModule, NgIf, CharacterComponent, ReplaceNumberWithDiceDirective, RenderGameMapDirective, FormsModule]
 })
 
-export class GameComponent {
+export class GameComponent implements OnInit, OnDestroy {
  
   constructor(private GameService: GameService) {}
+
+  ngOnInit(): void {
+    this.GameService.setupSocketConnection();
+  }
+
+  ngOnDestroy(): void {
+    this.GameService.disconnect();
+  }
 
   dungeonLevel: number = 0;
   isCharacterBeenChosen: boolean = false;

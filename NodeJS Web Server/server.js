@@ -8,6 +8,9 @@ const {dungeon} = require('./game/dungeon');
 // Express module
 const express = require("express");
 const app = express();
+// create server with express app and socket.io
+const server = require('http').createServer(app);
+const io = require('socket.io')(server);
 
 // Credentials for MySQL DB
 const mysql = require('mysql')
@@ -73,7 +76,14 @@ connection.query('SELECT 1 + 1 AS solution', (err, rows, fields) => {
 
 connection.end()
 
+io.on('connection', (socket) => {
+  console.log('user '+socket.id+' connected');
+  socket.on('disconnect', () => {
+    console.log('user '+socket.id+' disconnected');
+  });
+});
+
 // Server's App is listening on port 3000
-app.listen(3000, () => {
-  console.log("Server is up");
+server.listen(3000, () => {
+  console.log("Server is up!");
 });
