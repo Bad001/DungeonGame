@@ -34,13 +34,13 @@ class Character {                          // Character is a Superclass
     }
     levelUp(stat) {
         switch(stat) {
-            case 1: this.speed++;
+            case 0: this.speed++;
                 break;
-            case 2: this.damage++;
+            case 1: this.damage++;
                 break;
-            case 3: this.ac++;
+            case 2: this.ac++;
                 break;
-            case 4: this.range++;
+            case 3: this.range++;
                 break;
             default: console.log("An Error occured on levelling method");
         }

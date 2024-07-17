@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable } from 'rxjs';
 import { io } from 'socket.io-client';
 
 @Injectable({
@@ -10,7 +11,6 @@ export class GameService {
 
   constructor() { }
 
-  private energyDice: [number, number, number] = [3,4,5];
   private characters: { name: string, description: string }[] = [
     { "name": 'Barbarian', "description": 'Once per turn, you may choose to reroll all dice when on 1 Health' },
     { "name": 'Cleric', "description": 'If you roll the same number with all Energy dice, you can increase it by 2 (max.6)' },
@@ -26,6 +26,18 @@ export class GameService {
     this.socket = io();
   }
 
+  emit(event: string, data: any) {
+    this.socket.emit(event, data);
+  }
+
+  listenToServer(connection: any): Observable<any> {
+    return new Observable((subscribe) => {
+      this.socket.on(connection, (data: any) => {
+        subscribe.next(data);
+      })
+    });
+  }
+
   disconnect() {
     if (this.socket) {
       this.socket.disconnect();
@@ -36,7 +48,7 @@ export class GameService {
     [
       [0, 0, 0, 2, 0],
       [0, 0, 0, 1, 0],
-      [0, 0, 0, 0, 2],        // Test
+      [0, 0, 0, 0, 2],
       [0, 1, 0, 1, 0],
       [6, 0, 0, 0, 0]
     ],
@@ -49,9 +61,6 @@ export class GameService {
     ]
   ]
 
-  getEnergyDice(): [number, number, number] {
-    return this.energyDice;
-  }
   getCharacters(): { name: string, description: string }[] {
     return this.characters;
   }

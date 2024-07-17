@@ -5,8 +5,7 @@ const {dungeon} = require('./dungeon');
 const character = require('./creatures/characters');
 
 // Variables / Object
-let role = 'Wizard';
-let player = new character[role]('Player');
+let player = null;
 let currentLevelDungeon = [];
 let energyDice = [0,0,0];
 let assignedStats = [0,0,0];
@@ -16,26 +15,33 @@ let numberOfEnemies = 0;
 // Flags
 let levelUp = false;
 let isEnergyPhase = false;
-console.log(player);
-
-// Game
-enterLevel();
-do {
-    if(numberOfEnemies != 0) {
-        energyPhase();
-        playerPhase();
-        enemyMovementPhase();
-        enemyAttackPhase();
-    }
-    else {    
-        currentLevelIndex++;
-        levelUpOrRest();
-        enterLevel();
-    }
-} while((player.getHp > 0) && (currentLevelIndex < 12));
-currentLevelIndex === 12 ? console.log("You Win!") : console.log("You Lose!");
 
 // Functions
+function startGame(socket, role) {
+    return new Promise((resolve, reject) => {
+        player = new character[role]('Player');
+        console.log(player);
+        enterLevel();
+        if((player.getHp > 0) && ( currentLevelIndex < 12)) {
+            if(numberOfEnemies != 0) {
+                energyPhase(socket)
+                .then(() => {return playerPhase()})
+                .then(() => {return enemyMovementPhase()})
+                .then(() => {enemyAttackPhase()})
+                .catch(error => console.log(error));
+            }
+            else {
+                currentLevelIndex++;
+                levelUpOrRest();
+                enterLevel();
+            }
+        }
+        else {
+            resolve(currentLevelIndex === 12 ? 'You Win!' : 'You Lose!');
+        }
+    });
+}
+
 function enterLevel() { // Presets function
     switch (currentLevelIndex) {
         case 0:
@@ -137,25 +143,34 @@ function enterLevel() { // Presets function
     }
 }
 
-function energyPhase() {
-    for(let i = 0; i < 3; i++) {
-        energyDice[i] = Math.floor(Math.random() * 6) + 1;
-    }
-    isEnergyPhase = true;
-    // Here goes a blocking function (The user interacts)
+function energyPhase(socket) {
+    return new Promise((resolve, reject) => {
+        for(let i = 0; i < 3; i++) {
+            energyDice[i] = Math.floor(Math.random() * 6) + 1;
+        }
+        isEnergyPhase = true;
+        socket.emit('energyPhase', energyDice);
+        if(assignedStats.includes(0)) {
+            reject('User not ready');
+        }
+        else {
+            resolve(assignedStats)
+        }
+    });
 }
 
 function playerPhase() {
     isEnergyPhase = false;
+    console.log('player phase');
     // Here goes a blocking function (The user interacts)
 }
 
 function enemyMovementPhase() {
-    console.log("enemy movement phase");
+    console.log('enemy mov phase');
 }
 
 function enemyAttackPhase() {
-    console.log("enemy attack phase");
+    console.log('enemy attack phase');
 }
 
 function levelUpOrRest() {
@@ -166,3 +181,5 @@ function levelUpOrRest() {
         player.rest();
     }
 }
+
+module.exports = {startGame};

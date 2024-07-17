@@ -16,17 +16,7 @@ import { GameService } from '../../services/game.service';
     imports: [RouterOutlet, NgFor, RouterModule, NgIf, CharacterComponent, ReplaceNumberWithDiceDirective, RenderGameMapDirective, FormsModule]
 })
 
-export class GameComponent implements OnInit, OnDestroy {
- 
-  constructor(private GameService: GameService) {}
-
-  ngOnInit(): void {
-    this.GameService.setupSocketConnection();
-  }
-
-  ngOnDestroy(): void {
-    this.GameService.disconnect();
-  }
+export class GameComponent implements OnDestroy {
 
   dungeonLevel: number = 0;
   isCharacterBeenChosen: boolean = false;
@@ -35,15 +25,27 @@ export class GameComponent implements OnInit, OnDestroy {
   character: { name: string, description: string } = { name: '', description: ''};
   assignedStats = [0,0,0];
   die: number = 0;
-  coordinates: [number, number] = [0,0];
-  energyDice: [number, number, number] = this.GameService.getEnergyDice();
+  coordinates: number[] = [];
+  energyDice: number[] = [0];
   characters: { name: string, description: string }[] = this.GameService.getCharacters();
   dungeon:any [][] = this.GameService.getDungeon();
+
+  constructor(private GameService: GameService) {
+    this.GameService.setupSocketConnection();
+    this.GameService.listenToServer('energyPhase').subscribe((data) => {
+      this.energyDice = data;
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.GameService.disconnect();
+  }
 
   listenChildComponent(choiceOfUser: { name: string, description: string, chosen: boolean }) {
     this.isCharacterBeenChosen = choiceOfUser.chosen;
     this.character.name = choiceOfUser.name;
     this.character.description = choiceOfUser.description;
+    this.GameService.emit('startGame', this.character.name);
   }
 
   assignDie(die: number) {

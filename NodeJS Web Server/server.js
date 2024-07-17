@@ -1,4 +1,5 @@
 const path = require('path');
+const gameFile = require('./game/mechanics');
 
 // Jsons for Api calls
 const {bosses} = require('./game/creatures/enemies/bosses');
@@ -13,7 +14,8 @@ const server = require('http').createServer(app);
 const io = require('socket.io')(server);
 
 // Credentials for MySQL DB
-const mysql = require('mysql')
+const mysql = require('mysql');
+const { start } = require('repl');
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root',
@@ -77,9 +79,12 @@ connection.query('SELECT 1 + 1 AS solution', (err, rows, fields) => {
 connection.end()
 
 io.on('connection', (socket) => {
-  console.log('user '+socket.id+' connected');
+  console.log('Player '+socket.id+' joined a new game');
+  socket.on('startGame', (role) => {
+    gameFile.startGame(socket, role).then(message => {console.log(message)}).catch(e => console.log(e));
+  });
   socket.on('disconnect', () => {
-    console.log('user '+socket.id+' disconnected');
+    console.log('Player '+socket.id+' has left the game');
   });
 });
 
