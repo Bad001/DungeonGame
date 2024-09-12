@@ -1,4 +1,4 @@
-import { Directive, ElementRef } from '@angular/core';
+import { Directive, ElementRef, Input } from '@angular/core';
 
 enum Dice {
   One = "⚀",
@@ -14,12 +14,24 @@ enum Dice {
   standalone: true
 })
 export class ReplaceNumberWithDiceDirective {
+  
+  @Input() appReplaceNumberWithDice:any = '';
+
   constructor(private element: ElementRef) {}
   ngAfterViewInit() {
     if(this.element.nativeElement.innerHTML > 6 && this.element.nativeElement.innerHTML < 13) {
       this.element.nativeElement.innerHTML = "<div style=\"clip-path: polygon( 50% 0, 100% 38%, 81% 100%, 19% 100%, 0 38%);background-color: red;\">" + this.element.nativeElement.innerHTML + "</div>"
     }
     else {
+      if(typeof this.appReplaceNumberWithDice === 'object' && this.appReplaceNumberWithDice !== null) {
+        this.element.nativeElement.innerHTML = this.appReplaceNumberWithDice['hp'];
+        if(this.appReplaceNumberWithDice['name'] != 'Player') {
+          this.element.nativeElement.style.color = 'darkred';
+        }
+        else {
+          this.element.nativeElement.style.color = 'darkgreen';
+        }
+      }
       switch(this.element.nativeElement.innerHTML) {
         case '1': this.element.nativeElement.innerHTML = Dice.One;
           break;

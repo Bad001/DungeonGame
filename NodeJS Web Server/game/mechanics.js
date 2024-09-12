@@ -15,16 +15,19 @@ let numberOfEnemies = 0;
 // Flags
 let levelUp = false;
 let isEnergyPhase = false;
+// Socket
+let mySocket = null;
 
 // Functions
 function startGame(socket, role) {
     return new Promise((resolve, reject) => {
+        mySocket = socket;
         player = new character[role]('Player');
         console.log(player);
         enterLevel();
         if((player.getHp > 0) && ( currentLevelIndex < 12)) {
             if(numberOfEnemies != 0) {
-                energyPhase(socket)
+                energyPhase()
                 .then(() => {return playerPhase()})
                 .then(() => {return enemyMovementPhase()})
                 .then(() => {enemyAttackPhase()})
@@ -141,28 +144,32 @@ function enterLevel() { // Presets function
             break;
         default: console.log("Error at enterLevel function!");
     }
+    mySocket.emit('presets', currentLevelDungeon);
 }
 
-function energyPhase(socket) {
+function energyPhase() {
     return new Promise((resolve, reject) => {
         for(let i = 0; i < 3; i++) {
             energyDice[i] = Math.floor(Math.random() * 6) + 1;
         }
         isEnergyPhase = true;
-        socket.emit('energyPhase', energyDice);
-        if(assignedStats.includes(0)) {
-            reject('User not ready');
-        }
-        else {
-            resolve(assignedStats)
-        }
+        mySocket.emit('energyPhase', energyDice);
+        mySocket.on('assignedStats', (data) => {
+            assignedStats = data;
+            console.log(assignedStats);
+            if(data.includes(0)) {
+                reject('User not ready');
+            }
+            else {
+                resolve(assignedStats)
+            }
+        });
     });
 }
 
 function playerPhase() {
     isEnergyPhase = false;
     console.log('player phase');
-    // Here goes a blocking function (The user interacts)
 }
 
 function enemyMovementPhase() {

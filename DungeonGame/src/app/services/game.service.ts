@@ -44,27 +44,7 @@ export class GameService {
     }
   }
 
-  private dungeon:any [][] = [
-    [
-      [0, 0, 0, 2, 0],
-      [0, 0, 0, 1, 0],
-      [0, 0, 0, 0, 2],
-      [0, 1, 0, 1, 0],
-      [6, 0, 0, 0, 0]
-    ],
-    [
-      [0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0],
-      [1, 0, 0, 1, 0],        
-      [0, 0, 0, 1, 0],
-      [0, 0, 0, 0, 0]
-    ]
-  ]
-
   getCharacters(): { name: string, description: string }[] {
     return this.characters;
-  }
-  getDungeon() {
-    return this.dungeon;
   }
 }

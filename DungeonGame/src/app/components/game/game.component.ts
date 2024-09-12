@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { NgFor, NgIf } from '@angular/common';
 import { CharacterComponent } from "./character/character.component";
@@ -12,7 +12,7 @@ import { GameService } from '../../services/game.service';
     standalone: true,
     templateUrl: './game.component.html',
     styleUrl: './game.component.css',
-    changeDetection: ChangeDetectionStrategy.OnPush,
+    changeDetection: ChangeDetectionStrategy.Default,
     imports: [RouterOutlet, NgFor, RouterModule, NgIf, CharacterComponent, ReplaceNumberWithDiceDirective, RenderGameMapDirective, FormsModule]
 })
 
@@ -26,12 +26,16 @@ export class GameComponent implements OnDestroy {
   assignedStats = [0,0,0];
   die: number = 0;
   coordinates: number[] = [];
-  energyDice: number[] = [0];
+  energyDice: any[] = [];
   characters: { name: string, description: string }[] = this.GameService.getCharacters();
-  dungeon:any [][] = this.GameService.getDungeon();
+  dungeon:any [] = [];
 
   constructor(private GameService: GameService) {
     this.GameService.setupSocketConnection();
+    this.GameService.listenToServer('presets').subscribe((data) => {
+      this.dungeon = data;
+      console.log(this.dungeon);
+    });
     this.GameService.listenToServer('energyPhase').subscribe((data) => {
       this.energyDice = data;
     });
@@ -67,11 +71,10 @@ export class GameComponent implements OnDestroy {
 
   confirmStat() {
     this.isEnergyPhase = false;
-    console.log(this.assignedStats);
+    this.GameService.emit('assignedStats', this.assignedStats);
   }
 
   setCoordinates(coordinates: [number, number]) {
     this.coordinates = coordinates;
-    console.log(coordinates);
   }
 }

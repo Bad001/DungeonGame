@@ -1,7 +1,9 @@
 :host {
+    --hp:  lime;
     --mov: lightskyblue;
     --dmg: red;
     --def: cornflowerblue;
+    --rng: yellow;
 }
 
 .title {
@@ -73,7 +75,7 @@ h2 {
 }
 
 .stats tr td:nth-child(2), .hp {
-    color:lime;
+    color: var(--hp);
 }
 
 .stats tr td:nth-child(3), .mov {
@@ -89,7 +91,7 @@ h2 {
 }
 
 .stats tr td:nth-child(6), .rng {
-    color:yellow;
+    color: var(--rng);
 }
 
 .tableDivider {

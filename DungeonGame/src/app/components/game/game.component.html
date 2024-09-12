@@ -24,8 +24,8 @@
         </div>
         <div class="game-section center">
             <table class="dungeon">
-                <tr *ngFor="let row of dungeon[dungeonLevel]; index as i">
-                    <td *ngFor="let column of dungeon[dungeonLevel]; index as j" appReplaceNumberWithDice appRenderGameMap (click)="setCoordinates([i,j])">{{dungeon[dungeonLevel][i][j]}}</td>
+                <tr *ngFor="let row of dungeon; index as i">
+                    <td *ngFor="let column of dungeon; index as j" [appReplaceNumberWithDice]="dungeon[i][j]" appRenderGameMap (click)="setCoordinates([i,j])">{{dungeon[i][j]}}</td>
                 </tr>
             </table>
             <table class="stats">
