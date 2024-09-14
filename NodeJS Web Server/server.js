@@ -1,5 +1,5 @@
 const path = require('path');
-const gameFile = require('./game/mechanics');
+const game = require('./game/mechanics');
 
 // Jsons for Api calls
 const {bosses} = require('./game/creatures/enemies/bosses');
@@ -81,7 +81,8 @@ connection.end()
 io.on('connection', (socket) => {
   console.log('Player '+socket.id+' joined a new game');
   socket.on('startGame', (role) => {
-    gameFile.startGame(socket, role).then(message => {console.log(message)}).catch(e => console.log(e));
+    gameObject = new game.Game(socket);
+    gameObject.startGame(role).then(message => {console.log(message)}).catch(e => console.log(e));
   });
   socket.on('disconnect', () => {
     console.log('Player '+socket.id+' has left the game');

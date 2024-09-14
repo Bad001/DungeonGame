@@ -72,9 +72,18 @@ export class GameComponent implements OnDestroy {
   confirmStat() {
     this.isEnergyPhase = false;
     this.GameService.emit('assignedStats', this.assignedStats);
+    for(let i = 0; i < 3; i++) {
+      this.assignedStats[i] = 0;
+      this.energyDice[i] = 0;
+    }
   }
 
   setCoordinates(coordinates: [number, number]) {
     this.coordinates = coordinates;
+  }
+
+  endTurn() {
+    this.isEnergyPhase = true;
+    console.log('End '+ (this.dungeonLevel+1) +' Turn');
   }
 }

@@ -1,6 +1,6 @@
 class Character {                          // Character is a Superclass
-    constructor(name) {                    // every new player starts with the following stats
-        this.name = name;
+    constructor() {                    // every new player starts with the following stats
+        this.name = 'Player';
         this.hp = 6;
         this.speed = 1;
         this.damage = 1;
@@ -52,7 +52,8 @@ class Character {                          // Character is a Superclass
 
 class Enemy extends Character {            // Each Enemy has different stats from each other and spawns in different cells
     constructor(name, hp, speed, damage, ac, range, position) {
-        super(name);
+        super();
+        this.name = name;
         this.hp = hp;
         this.speed = speed;
         this.damage = damage;
