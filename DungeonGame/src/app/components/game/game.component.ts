@@ -17,30 +17,46 @@ import { GameService } from '../../services/game.service';
 })
 
 export class GameComponent implements OnDestroy {
-
-  dungeonLevel: number = 0;
-  isCharacterBeenChosen: boolean = false;
-  isEnergyPhase: boolean = true;
-  isDieButtonPressed: boolean = false;
+  // Choose Character Objects
   character: { name: string, description: string } = { name: '', description: ''};
+  characters: { name: string, description: string }[] = this.GameService.getCharacters();
+  // Flags
+  isCharacterBeenChosen: boolean = false;
+  isEnergyPhase: boolean = false;
+  isDieButtonPressed: boolean = false;
+  // Client will send this data to Server  | Client --> Server
   assignedStats = [0,0,0];
   die: number = 0;
   coordinates: number[] = [];
-  energyDice: any[] = [];
-  characters: { name: string, description: string }[] = this.GameService.getCharacters();
-  dungeon:any [] = [];
+  playerAction: string = '';
+  // Client will listen to retrieve this data from Server  | Client <-- Server
+  energyDice: any[] = [];   // Random energyDice for energyDice Phase
+  dungeon:any [] = [];      // Map of the current dungeon
+  dungeonLevel: number = 0; // Current Dungeon Level Index
   enemyInfo:any = {};
+  numberOfEnemies: number = 0;
+  playerInfo:any = {};
 
   constructor(private GameService: GameService) {
     this.GameService.setupSocketConnection();
-    this.GameService.listenToServer('energyPhase').subscribe((data) => {
-      this.energyDice = data[0];
-    });
     this.GameService.listenToServer('presets').subscribe((data) => {
       this.dungeon = data[0];
-      console.log(data[0]);
-      this.enemyInfo = data[1];
-      this.dungeonLevel = data[2];
+      this.dungeonLevel = data[1];
+      this.enemyInfo = data[2];
+      this.numberOfEnemies = data[3];
+      this.playerInfo = data[4];
+    });
+    this.GameService.listenToServer('energyPhase').subscribe((data) => {
+      this.isEnergyPhase = data[0];
+      this.energyDice = data[1];
+    });
+    this.GameService.listenToServer('playerPhase').subscribe((data) => {
+      if(typeof data[0] === 'string') {
+        alert(data[0]);
+      }
+      else {
+        this.dungeon = data[0];
+      }
     });
   }
 
@@ -73,19 +89,42 @@ export class GameComponent implements OnDestroy {
   }
 
   confirmStat() {
-    this.isEnergyPhase = false;
     this.GameService.emit('assignedStats', this.assignedStats);
-    for(let i = 0; i < 3; i++) {
-      this.assignedStats[i] = 0;
-      this.energyDice[i] = 0;
-    }
   }
 
+  // Player Phase functions
+  
   setCoordinates(coordinates: [number, number]) {
     this.coordinates = coordinates;
   }
 
+  move() {
+    if(this.playerAction == 'move') {
+      this.playerAction = '';
+    }
+    else {
+      this.playerAction = 'move';
+    }
+  }
+
+  attack() {
+    if(this.playerAction == 'attack') {
+      this.playerAction = '';
+    }
+    else {
+      this.playerAction = 'attack';
+    }
+  }
+
+  confirmAction() {
+    this.GameService.emit('playerPhase', false, this.playerAction, this.coordinates);
+  }
+
   endTurn() {
-    this.isEnergyPhase = true;
+    this.GameService.emit('playerPhase', true);
+    this.playerAction = '';
+    for(let i = 0; i < 3; i++) {
+      this.assignedStats[i] = 0;
+    }
   }
 }

@@ -12,6 +12,18 @@ class Character {                          // Character is a Superclass
     get getHp() {
         return this.hp;
     }
+    get getSpeed() {
+        return this.speed;
+    }
+    get getDamage() {
+        return this.damage;
+    }
+    get getAc() {
+        return this.ac;
+    }
+    get getRange() {
+        return this.range;
+    }
     get getPosition() {
         return this.position;
     }
@@ -28,8 +40,32 @@ class Character {                          // Character is a Superclass
     set move(position) {
         this.position = [position[0], position[1]];
     }
-    attack(enemy, damageModifier) {
-        enemy.reduceHp((this.damage + damageModifier));
+    /**
+     * @param {number} speed
+     */
+    set setSpeed(speed) {
+        this.speed = speed;
+    }
+    /**
+     * @param {number} damage
+     */
+    set setDamage(damage) {
+        this.damage = damage;
+    }
+    /**
+     * @param {number} ac
+     */
+    set setAc(ac) {
+        this.ac = ac;
+    }
+    /**
+     * @param {number} range
+     */
+    set setRange(range) {
+        this.range = range;
+    }
+    attack(enemy) {
+        enemy.reduceHp((this.damage));
         return enemy;
     }
     levelUp(stat) {

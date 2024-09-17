@@ -135,8 +135,7 @@ class Game {
                 break;
             default: console.log("Error at enterLevel function!");
         }
-        console.log(this.currentLevelDungeon);
-        this.socket.emit('presets', this.currentLevelDungeon, currentEnemy, this.currentLevelIndex);
+        this.socket.emit('presets', this.currentLevelDungeon, this.currentLevelIndex, currentEnemy, this.numberOfEnemies, this.player);
     }
 
     energyPhase() {
@@ -145,13 +144,15 @@ class Game {
                 this.energyDice[i] = Math.floor(Math.random() * 6) + 1;
             }
             this.isEnergyPhase = true;
-            this.socket.emit('energyPhase', this.energyDice);
+            this.socket.emit('energyPhase', this.isEnergyPhase, this.energyDice);
             this.socket.once('assignedStats', (data) => {
-                this.assignedStats = data;
-                if(data.includes(0)) {
-                    reject('User not ready');
+                this.assignedStats = data[0];
+                if(data[0].includes(0)) {
+                    reject('An error occured at Energy Phase!');
                 }
                 else {
+                    this.isEnergyPhase = false;
+                    this.socket.emit('energyPhase', this.isEnergyPhase);
                     resolve(console.log(this.assignedStats));
                 }
             });
@@ -159,16 +160,51 @@ class Game {
     }
 
     playerPhase() {
-        this.isEnergyPhase = false;
-        console.log('player phase');
+        return new Promise((resolve) => {
+            console.log('player phase');
+            this.player.speed = this.assignedStats[0] + this.player.getSpeed;
+            this.player.damage = this.assignedStats[1] + this.player.getDamage;
+            this.player.ac = this.assignedStats[2] + this.player.getAc;
+            this.socket.on('playerPhase', (data) => {
+                let endPhase = data[0];
+                let action = data[1];
+                let coordinates = data[2];
+                if(endPhase) {
+                    console.log('risolta playerPhase');
+                    resolve();
+                }
+                switch(action) {
+                    case 'move':
+                        if(this.currentLevelDungeon[coordinates[0]][coordinates[1]] === 0) {
+                            this.currentLevelDungeon[this.player.getPosition[0]][this.player.getPosition[1]] = 0;
+                            this.player.move = coordinates;
+                            this.currentLevelDungeon[this.player.getPosition[0]][this.player.getPosition[1]] = this.player;
+                            this.socket.emit('playerPhase', this.currentLevelDungeon);
+                        }
+                        else {
+                            this.socket.emit('playerPhase', 'You can\'t go in that direction!');
+                        }
+                        break;
+                    case 'attack':
+                        break;
+                    default: 'An error occured on playerPhase - actions';
+                }
+            });
+        });
     }
 
     enemyMovementPhase() {
+        this.socket.removeAllListeners('playerPhase');
         console.log('enemy mov phase');
     }
     
     enemyAttackPhase() {
         console.log('enemy attack phase');
+        this.player.speed -= this.assignedStats[0];
+        this.player.damage -= this.assignedStats[1];
+        this.player.ac -= this.assignedStats[2];
+        this.isEnergyPhase = true;
+        this.socket.emit('energyPhase', this.isEnergyPhase);
     }
     
     levelUpOrRest() {
@@ -187,10 +223,7 @@ class Game {
                 this.isFirstTurn = false;
                 this.enterLevel();
             }
-            else {
-                this.enterLevel();
-            }
-            if(this.currentLevelIndex < 12) {//(this.player.getHp > 0) && (this.currentLevelIndex < 12)) {
+            if((this.player.getHp > 0) && (this.currentLevelIndex < 12)) {
                 if(this.numberOfEnemies != 0) {
                     this.energyPhase()
                     .then(() => {return this.playerPhase()})
@@ -198,7 +231,6 @@ class Game {
                     .then(() => {return this.enemyAttackPhase()})
                     .then(() => {resolve(this.startGame())})
                     .catch(error => console.log(error));
-                    this.currentLevelIndex++;
                 }
                 else {
                     this.currentLevelIndex++;

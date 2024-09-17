@@ -46,10 +46,12 @@
                     <td class="tableDivider">{{enemyInfo.range}}</td>
                 </tr>
                 <tr>
-                    <td>Player</td>
-                    <td>6</td>
-                    <td *ngFor="let stat of assignedStats">{{stat+1}}</td>
-                    <td>2</td>
+                    <td>{{playerInfo.name}}</td>
+                    <td>{{playerInfo.hp}}</td>
+                    <td>{{assignedStats[0]+playerInfo.speed}}</td>
+                    <td>{{assignedStats[1]+playerInfo.damage}}</td>
+                    <td>{{assignedStats[2]+playerInfo.ac}}</td>
+                    <td>{{playerInfo.range}}</td>
                 </tr>
             </table>
         </div>
@@ -76,10 +78,12 @@
             <ng-container *ngIf="!isEnergyPhase">
                 <h2>Actions</h2>
                 <ul>
-                    <li><button dataOnHover=">Move<"><span class="buttonLabel">> Move <</span></button></li>
-                    <li><button dataOnHover=">Attack<"><span class="buttonLabel">> Attack <</span></button></li>
+                    <li *ngIf="playerAction != 'attack'"><button dataOnHover=">Move<" (click)="move()"><span class="buttonLabel">> Move <</span></button></li>
+                    <li *ngIf="playerAction != 'move'"><button dataOnHover=">Attack<" (click)="attack()"><span class="buttonLabel">> Attack <</span></button></li>
+                    <li *ngIf="playerAction != '' && coordinates.length != 0"><button dataOnHover=">Confirm<" (click)="confirmAction()"><span class="buttonLabel">> Confirm <</span></button></li>
                     <li><button dataOnHover=">End Turn<" (click)="endTurn()"><span class="buttonLabel">> End Turn <</span></button></li>
                 </ul>
+                <h2>{{coordinates}}</h2>
             </ng-container>
         </div>
     </div>
