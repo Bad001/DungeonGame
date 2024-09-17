@@ -32,7 +32,7 @@ export class GameService {
 
   listenToServer(connection: any): Observable<any> {
     return new Observable((subscribe) => {
-      this.socket.on(connection, (data: any) => {
+      this.socket.on(connection, (...data: any[]) => {
         subscribe.next(data);
       })
     });

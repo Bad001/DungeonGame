@@ -4,7 +4,7 @@ const game = require('./game/mechanics');
 // Jsons for Api calls
 const {bosses} = require('./game/creatures/enemies/bosses');
 const {minions} = require('./game/creatures/enemies/minions');
-const {dungeon} = require('./game/dungeon');
+const dungeon = require('./game/dungeon');
 
 // Express module
 const express = require("express");

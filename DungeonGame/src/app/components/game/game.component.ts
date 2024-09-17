@@ -29,15 +29,18 @@ export class GameComponent implements OnDestroy {
   energyDice: any[] = [];
   characters: { name: string, description: string }[] = this.GameService.getCharacters();
   dungeon:any [] = [];
+  enemyInfo:any = {};
 
   constructor(private GameService: GameService) {
     this.GameService.setupSocketConnection();
-    this.GameService.listenToServer('presets').subscribe((data) => {
-      this.dungeon = data;
-      console.log(this.dungeon);
-    });
     this.GameService.listenToServer('energyPhase').subscribe((data) => {
-      this.energyDice = data;
+      this.energyDice = data[0];
+    });
+    this.GameService.listenToServer('presets').subscribe((data) => {
+      this.dungeon = data[0];
+      console.log(data[0]);
+      this.enemyInfo = data[1];
+      this.dungeonLevel = data[2];
     });
   }
 
@@ -84,6 +87,5 @@ export class GameComponent implements OnDestroy {
 
   endTurn() {
     this.isEnergyPhase = true;
-    console.log('End '+ (this.dungeonLevel+1) +' Turn');
   }
 }

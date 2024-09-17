@@ -50,4 +50,4 @@ const dungeon = [
     ]
 ]
 
-module.exports = {dungeon}
+module.exports = dungeon;
