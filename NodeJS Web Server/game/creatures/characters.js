@@ -6,7 +6,7 @@ class Character {                          // Character is a Superclass
         this.damage = 1;
         this.ac = 1;
         this.range = 2;
-        this.position = [4, 0];             // Represent the actual position of a Character in the bidimensional array (Map of levels)
+        this.position = [4,0];             // Represent the actual position of a Character in the bidimensional array (Map of levels)
     }
     // Getters methods
     get getHp() {

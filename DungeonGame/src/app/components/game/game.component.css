@@ -150,3 +150,7 @@ a.giveUp:hover:before {
 button.energyDie:focus {
     color: red;
 }
+
+.hint {
+    font-size: 20px;
+}

@@ -3,6 +3,7 @@ const {bosses} = require('./creatures/enemies/bosses');
 const {minions} = require('./creatures/enemies/minions');
 const dungeon = require('./dungeon');
 const character = require('./creatures/characters');
+const {astar} = require('./astar');
 
 class Game {
     constructor(socket) {
@@ -11,6 +12,7 @@ class Game {
         this.currentLevelDungeon = [];
         this.energyDice = [0,0,0];
         this.assignedStats = [0,0,0];
+        this.originalSpeed = 0;
         // Indexes
         this.currentLevelIndex = 0;
         this.numberOfEnemies = 0;
@@ -140,6 +142,7 @@ class Game {
 
     energyPhase() {
         return new Promise((resolve, reject) => {
+            console.log('Energy Phase of Player ' + this.socket.id);
             for(let i = 0; i < 3; i++) {
                 this.energyDice[i] = Math.floor(Math.random() * 6) + 1;
             }
@@ -152,8 +155,12 @@ class Game {
                 }
                 else {
                     this.isEnergyPhase = false;
-                    this.socket.emit('energyPhase', this.isEnergyPhase);
-                    resolve(console.log(this.assignedStats));
+                    this.originalSpeed = this.player.getSpeed;
+                    this.player.setSpeed = this.assignedStats[0] + this.player.getSpeed;
+                    this.player.setDamage = this.assignedStats[1] + this.player.getDamage;
+                    this.player.setAc = this.assignedStats[2] + this.player.getAc;
+                    this.socket.emit('energyPhase', this.isEnergyPhase, this.player);
+                    resolve(console.log(this.assignedStats + ' assigned stats of Player ' + this.socket.id));
                 }
             });
         });
@@ -161,31 +168,41 @@ class Game {
 
     playerPhase() {
         return new Promise((resolve) => {
-            console.log('player phase');
-            this.player.speed = this.assignedStats[0] + this.player.getSpeed;
-            this.player.damage = this.assignedStats[1] + this.player.getDamage;
-            this.player.ac = this.assignedStats[2] + this.player.getAc;
+            console.log('Player phase of Player ' + this.socket.id);
             this.socket.on('playerPhase', (data) => {
-                let endPhase = data[0];
-                let action = data[1];
-                let coordinates = data[2];
+                const endPhase = data[0];
+                const action = data[1];
+                const coordinates = data[2];
                 if(endPhase) {
-                    console.log('risolta playerPhase');
                     resolve();
                 }
                 switch(action) {
                     case 'move':
                         if(this.currentLevelDungeon[coordinates[0]][coordinates[1]] === 0) {
-                            this.currentLevelDungeon[this.player.getPosition[0]][this.player.getPosition[1]] = 0;
-                            this.player.move = coordinates;
-                            this.currentLevelDungeon[this.player.getPosition[0]][this.player.getPosition[1]] = this.player;
-                            this.socket.emit('playerPhase', this.currentLevelDungeon);
+                            const path = astar(this.currentLevelDungeon, this.player.getPosition, coordinates);
+                            console.log(path);
+                            if((this.player.getSpeed - path['totalMovementCost']) >= 0) {
+                                this.currentLevelDungeon[this.player.getPosition[0]][this.player.getPosition[1]] = 0;
+                                this.player.move = coordinates;
+                                this.currentLevelDungeon[this.player.getPosition[0]][this.player.getPosition[1]] = this.player;
+                                this.player.setSpeed = (this.player.getSpeed - path['totalMovementCost']);
+                                this.socket.emit('playerPhase', this.currentLevelDungeon, this.player);
+                            }
+                            else {
+                                this.socket.emit('playerPhase', 'You don\'t have enough mov speed points to go there!');    
+                            }
                         }
                         else {
                             this.socket.emit('playerPhase', 'You can\'t go in that direction!');
                         }
                         break;
                     case 'attack':
+                        if(this.currentLevelDungeon[coordinates[0]][coordinates[1]] instanceof character.Enemy) {
+                            this.socket.emit('playerPhase', this.currentLevelDungeon);
+                        }
+                        else {
+                            this.socket.emit('playerPhase', 'You can\'t attack that!');
+                        }
                         break;
                     default: 'An error occured on playerPhase - actions';
                 }
@@ -195,16 +212,31 @@ class Game {
 
     enemyMovementPhase() {
         this.socket.removeAllListeners('playerPhase');
-        console.log('enemy mov phase');
+        let enemies = [];
+        console.log('Enemy movement phase of Player ' + this.socket.id);
+        for(let i = 0; i < this.currentLevelDungeon.length; i++) {
+            for(let j = 0; j < this.currentLevelDungeon.length; j++) {
+                if(this.currentLevelDungeon[i][j] instanceof character.Enemy) {
+                    enemies.push(this.currentLevelDungeon[i][j]);
+                }
+            }
+        }
+        console.log(enemies);
+        /*
+        for(let i = 0; i < enemies.length; i++) {
+            let path = astar(this.currentLevelDungeon, enemies[i], );
+        }
+        */
+        this.socket.emit('enemyPhase', this.currentLevelDungeon);
     }
     
     enemyAttackPhase() {
-        console.log('enemy attack phase');
-        this.player.speed -= this.assignedStats[0];
-        this.player.damage -= this.assignedStats[1];
-        this.player.ac -= this.assignedStats[2];
-        this.isEnergyPhase = true;
-        this.socket.emit('energyPhase', this.isEnergyPhase);
+        console.log('Enemy attack phase of Player ' + this.socket.id);
+        this.player.setSpeed = this.originalSpeed;
+        this.player.setDamage = this.player.getDamage - this.assignedStats[1];
+        this.player.setAc =  this.player.getAc - this.assignedStats[2];
+        this.assignedStats = [0,0,0];
+        this.socket.emit('enemyPhase', this.currentLevelDungeon, this.player);
     }
     
     levelUpOrRest() {

@@ -48,9 +48,16 @@
                 <tr>
                     <td>{{playerInfo.name}}</td>
                     <td>{{playerInfo.hp}}</td>
-                    <td>{{assignedStats[0]+playerInfo.speed}}</td>
-                    <td>{{assignedStats[1]+playerInfo.damage}}</td>
-                    <td>{{assignedStats[2]+playerInfo.ac}}</td>
+                    <ng-container *ngIf="isEnergyPhase; else confirmedStats">
+                        <td>{{assignedStats[0]+playerInfo.speed}}</td>
+                        <td>{{assignedStats[1]+playerInfo.damage}}</td>
+                        <td>{{assignedStats[2]+playerInfo.ac}}</td>
+                    </ng-container>
+                    <ng-template #confirmedStats>
+                        <td>{{playerInfo.speed}}</td>
+                        <td>{{playerInfo.damage}}</td>
+                        <td>{{playerInfo.ac}}</td>
+                    </ng-template>
                     <td>{{playerInfo.range}}</td>
                 </tr>
             </table>
@@ -83,7 +90,8 @@
                     <li *ngIf="playerAction != '' && coordinates.length != 0"><button dataOnHover=">Confirm<" (click)="confirmAction()"><span class="buttonLabel">> Confirm <</span></button></li>
                     <li><button dataOnHover=">End Turn<" (click)="endTurn()"><span class="buttonLabel">> End Turn <</span></button></li>
                 </ul>
-                <h2>{{coordinates}}</h2>
+                <p class="hint">Click a cell of map to set coordinates</p>
+                <h2 *ngIf="coordinates.length != 0">{{coordinates}}</h2>
             </ng-container>
         </div>
     </div>

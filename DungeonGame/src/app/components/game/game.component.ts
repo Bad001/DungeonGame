@@ -48,7 +48,12 @@ export class GameComponent implements OnDestroy {
     });
     this.GameService.listenToServer('energyPhase').subscribe((data) => {
       this.isEnergyPhase = data[0];
-      this.energyDice = data[1];
+      if(!Array.isArray(data[1])) {
+        this.playerInfo = data[1];
+      }
+      else {
+        this.energyDice = data[1];
+      }
     });
     this.GameService.listenToServer('playerPhase').subscribe((data) => {
       if(typeof data[0] === 'string') {
@@ -56,6 +61,15 @@ export class GameComponent implements OnDestroy {
       }
       else {
         this.dungeon = data[0];
+        if(!(data[1] === undefined)) {
+          this.playerInfo = data[1];
+        }
+      }
+    });
+    this.GameService.listenToServer('enemyPhase').subscribe((data) => {
+      this.dungeon = data[0];
+      if(!(data[1] === undefined)) {
+        this.playerInfo = data[1];
       }
     });
   }
@@ -95,7 +109,9 @@ export class GameComponent implements OnDestroy {
   // Player Phase functions
   
   setCoordinates(coordinates: [number, number]) {
-    this.coordinates = coordinates;
+    if(!this.isEnergyPhase) {
+      this.coordinates = coordinates;
+    }
   }
 
   move() {
@@ -118,6 +134,7 @@ export class GameComponent implements OnDestroy {
 
   confirmAction() {
     this.GameService.emit('playerPhase', false, this.playerAction, this.coordinates);
+    this.coordinates = [];
   }
 
   endTurn() {
