@@ -97,12 +97,6 @@ class Enemy extends Character {            // Each Enemy has different stats fro
         this.range = range;
         this.position = position;
     }
-    move() {
-        // to do
-    }
-    attack() {
-        // to do
-    }
     levelUp() {}    // Overriding those two methods because enemies doesn't level up or rest
     rest() {}
 }

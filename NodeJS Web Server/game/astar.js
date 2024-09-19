@@ -117,4 +117,32 @@ function astar(grid, start, goal) {
     return { path: [], totalMovementCost: 0 }; // Return empty path and 0 cost if no path is found
 }
 
-module.exports = { astar };
+function findAdjacentStraightCells(grid, cell) {
+    const [row, col] = cell;  // Destructure the cell array to get row and col
+
+    const directions = [
+        [-1, 0], // Up
+        [1, 0],  // Down
+        [0, -1], // Left
+        [0, 1]   // Right
+    ];
+    
+    const adjacentCells = [];
+
+    directions.forEach(([rowOffset, colOffset]) => {
+        const newRow = row + rowOffset;
+        const newCol = col + colOffset;
+        
+        // Check if the new row and col are within grid bounds
+        if (newRow >= 0 && newRow < grid.length && newCol >= 0 && newCol < grid[0].length) {
+            // Only add the cell if its value is 0
+            if (grid[newRow][newCol] === 0) {
+                adjacentCells.push([newRow, newCol]);
+            }
+        }
+    });
+    
+    return adjacentCells;
+}
+
+module.exports = { astar, findAdjacentStraightCells };

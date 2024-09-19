@@ -34,7 +34,6 @@ export class GameComponent implements OnDestroy {
   dungeon:any [] = [];      // Map of the current dungeon
   dungeonLevel: number = 0; // Current Dungeon Level Index
   enemyInfo:any = {};
-  numberOfEnemies: number = 0;
   playerInfo:any = {};
 
   constructor(private GameService: GameService) {
@@ -43,8 +42,7 @@ export class GameComponent implements OnDestroy {
       this.dungeon = data[0];
       this.dungeonLevel = data[1];
       this.enemyInfo = data[2];
-      this.numberOfEnemies = data[3];
-      this.playerInfo = data[4];
+      this.playerInfo = data[3];
     });
     this.GameService.listenToServer('energyPhase').subscribe((data) => {
       this.isEnergyPhase = data[0];
