@@ -1,5 +1,6 @@
 // A* Algorithm for Pathfinding based on game rules
 
+// Node class to represent each cell in the grid
 class Node {
     constructor(x, y, g, h, f, parent = null) {
         this.x = x; // x coordinate
@@ -18,7 +19,7 @@ function heuristic(a, b) {
     return Math.max(dx, dy); // Chebyshev distance for diagonal movement
 }
 
-// A* Pathfinding Algorithm
+// Movement costs
 const MOVEMENT_COSTS = {
     diagonal: 3,
     straight: 2
@@ -29,20 +30,64 @@ function isWalkable(cell) {
     return cell === 0; // Adjust based on your representation of walkable cells
 }
 
-function astar(grid, start, goal) {
+// Helper function to find an adjacent accessible cell
+function findAdjacentAccessibleCell(grid, goal) {
+    const neighbors = [
+        [goal[0] - 1, goal[1]], // left
+        [goal[0] + 1, goal[1]], // right
+        [goal[0], goal[1] - 1], // up
+        [goal[0], goal[1] + 1], // down
+        [goal[0] - 1, goal[1] - 1], // top-left
+        [goal[0] + 1, goal[1] - 1], // top-right
+        [goal[0] - 1, goal[1] + 1], // bottom-left
+        [goal[0] + 1, goal[1] + 1]  // bottom-right
+    ];
+
+    for (const [nx, ny] of neighbors) {
+        if (nx >= 0 && ny >= 0 && nx < grid.length && ny < grid[0].length && isWalkable(grid[nx][ny])) {
+            return [nx, ny]; // Return the first accessible neighbor
+        }
+    }
+
+    return null; // No accessible neighbor found
+}
+
+// A* Pathfinding Algorithm
+function astar(grid, start, goal, maxMovementPoints) {
     const openSet = [];
     const closedSet = new Set();
-    
+
+    // Check if the goal is walkable; if not, find an adjacent accessible cell
+    if (!isWalkable(grid[goal[0]][goal[1]])) {
+        const newGoal = findAdjacentAccessibleCell(grid, goal);
+        if (newGoal) {
+            goal = newGoal; // Adjust the goal to the nearest accessible cell
+        } else {
+            return { path: [], totalMovementCost: 0 }; // If no accessible cell found, return empty
+        }
+    }
+
     const startNode = new Node(start[0], start[1], 0, heuristic(start, goal), 0);
     startNode.f = startNode.g + startNode.h;
     openSet.push(startNode);
 
     let totalMovementCost = 0; // Initialize total movement cost
+    let closestPoint = null; // Track the closest reachable point
+    let minDistanceToGoal = Infinity; // Initialize minimum distance to goal
 
     while (openSet.length > 0) {
         // Sort openSet by f value and get the node with the lowest f
         openSet.sort((a, b) => a.f - b.f);
         const current = openSet.shift();
+
+        // Calculate the distance to the goal
+        const distanceToGoal = heuristic(current, { x: goal[0], y: goal[1] });
+
+        // Update closest point if current is closer to goal
+        if (distanceToGoal < minDistanceToGoal) {
+            minDistanceToGoal = distanceToGoal;
+            closestPoint = current; // Track the closest point reached
+        }
 
         // If we've reached the goal, reconstruct the path
         if (current.x === goal[0] && current.y === goal[1]) {
@@ -97,6 +142,9 @@ function astar(grid, start, goal) {
                 const hScore = heuristic({ x: nx, y: ny }, { x: goal[0], y: goal[1] });
                 const fScore = gScore + hScore;
 
+                // Check if the movement exceeds the maximum movement points
+                if (gScore > maxMovementPoints) continue; // Ignore neighbors that exceed movement limit
+
                 // Check if the neighbor is already in openSet
                 const existingNode = openSet.find(node => node.x === nx && node.y === ny);
                 if (!existingNode || fScore < existingNode.f) {
@@ -114,35 +162,33 @@ function astar(grid, start, goal) {
         }
     }
 
+    // If the goal was not reached, return the closest point path
+    if (closestPoint) {
+        const path = [];
+        let temp = closestPoint;
+        while (temp) {
+            path.push([temp.x, temp.y]);
+            temp = temp.parent;
+        }
+        path.reverse(); // Return reversed path
+
+        // Calculate the total movement cost for the path to the closest point
+        for (let i = 0; i < path.length - 1; i++) {
+            const [x1, y1] = path[i];
+            const [x2, y2] = path[i + 1];
+
+            // Determine if the movement is diagonal or straight
+            if (Math.abs(x2 - x1) === 1 && Math.abs(y2 - y1) === 1) {
+                totalMovementCost += MOVEMENT_COSTS.diagonal; // Diagonal movement
+            } else {
+                totalMovementCost += MOVEMENT_COSTS.straight; // Straight movement
+            }
+        }
+
+        return { path: path, totalMovementCost }; // Return path and total movement cost to the closest point
+    }
+
     return { path: [], totalMovementCost: 0 }; // Return empty path and 0 cost if no path is found
 }
 
-function findAdjacentStraightCells(grid, cell) {
-    const [row, col] = cell;  // Destructure the cell array to get row and col
-
-    const directions = [
-        [-1, 0], // Up
-        [1, 0],  // Down
-        [0, -1], // Left
-        [0, 1]   // Right
-    ];
-    
-    const adjacentCells = [];
-
-    directions.forEach(([rowOffset, colOffset]) => {
-        const newRow = row + rowOffset;
-        const newCol = col + colOffset;
-        
-        // Check if the new row and col are within grid bounds
-        if (newRow >= 0 && newRow < grid.length && newCol >= 0 && newCol < grid[0].length) {
-            // Only add the cell if its value is 0
-            if (grid[newRow][newCol] === 0) {
-                adjacentCells.push([newRow, newCol]);
-            }
-        }
-    });
-    
-    return adjacentCells;
-}
-
-module.exports = { astar, findAdjacentStraightCells };
+module.exports = { astar };

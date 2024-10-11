@@ -178,7 +178,7 @@ class Game {
                 switch(action) {
                     case 'move':
                         if(this.currentLevelDungeon[coordinates[0]][coordinates[1]] === 0) {
-                            const path = pathfinding.astar(this.currentLevelDungeon, this.player.getPosition, coordinates);
+                            const path = pathfinding.astar(this.currentLevelDungeon, this.player.getPosition, coordinates, this.player.getSpeed);
                             console.log(path);
                             if((this.player.getSpeed - path['totalMovementCost']) >= 0 && path['totalMovementCost'] != 0) {
                                 this.currentLevelDungeon[this.player.getPosition[0]][this.player.getPosition[1]] = 0;
@@ -211,33 +211,17 @@ class Game {
 
     enemyMovementPhase() {
         this.socket.removeAllListeners('playerPhase');
-        let adjacentCells = [];
-        let paths = [];
         let bestPaths = [];
         console.log('Enemy movement phase of Player ' + this.socket.id);
         for(let i = 0; i < this.enemies.length; i++) {
-            adjacentCells = pathfinding.findAdjacentStraightCells(this.currentLevelDungeon, this.player.getPosition);
-            for(let j = 0; j < adjacentCells.length; j++) {
-                console.log(pathfinding.astar(this.currentLevelDungeon, this.enemies[i].getPosition, adjacentCells[j]));
-                paths.push(pathfinding.astar(this.currentLevelDungeon, this.enemies[i].getPosition, adjacentCells[j]));
-                if(j > 0) {
-                    if(paths[0]['totalMovementCost'] >= paths[1]['totalMovementCost']) {
-                        paths.shift();
-                    }
-                    else {
-                        paths.pop();
-                    }
-                }
-            }
-            if(adjacentCells.length > 0) {
+            bestPaths.push(pathfinding.astar(this.currentLevelDungeon, this.enemies[i].getPosition, this.player.getPosition, this.enemies[i].getSpeed));
+            console.log(bestPaths[i]);
+            if(bestPaths[i].totalMovementCost != 0) {
                 this.currentLevelDungeon[this.enemies[i].getPosition[0]][this.enemies[i].getPosition[1]] = 0;
-                this.enemies[i].move = paths[0]['path'][paths[0]['path'].length-1];
+                this.enemies[i].move = bestPaths[i].path.slice(-1)[0];
                 this.currentLevelDungeon[this.enemies[i].getPosition[0]][this.enemies[i].getPosition[1]] = this.enemies[i];
             }
-            bestPaths.push(paths);
-            paths = [];
         }
-        console.log('Best Paths ' + bestPaths);
         this.socket.emit('enemyPhase', this.currentLevelDungeon);
     }
     
