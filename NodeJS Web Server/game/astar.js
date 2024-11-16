@@ -31,7 +31,7 @@ function isWalkable(cell) {
 }
 
 // Helper function to find an adjacent accessible cell
-function findAdjacentAccessibleCell(grid, goal) {
+function findAdjacentAccessibleCell(grid, goal, start) {
     const neighbors = [
         [goal[0] - 1, goal[1]], // left
         [goal[0] + 1, goal[1]], // right
@@ -44,6 +44,9 @@ function findAdjacentAccessibleCell(grid, goal) {
     ];
 
     for (const [nx, ny] of neighbors) {
+        if (nx === start[0] && ny === start[1]) {
+            return goal; // Start is in front of the goal; don't move it
+        }
         if (nx >= 0 && ny >= 0 && nx < grid.length && ny < grid[0].length && isWalkable(grid[nx][ny])) {
             return [nx, ny]; // Return the first accessible neighbor
         }
@@ -59,7 +62,7 @@ function astar(grid, start, goal, maxMovementPoints) {
 
     // Check if the goal is walkable; if not, find an adjacent accessible cell
     if (!isWalkable(grid[goal[0]][goal[1]])) {
-        const newGoal = findAdjacentAccessibleCell(grid, goal);
+        const newGoal = findAdjacentAccessibleCell(grid, goal, start);
         if (newGoal) {
             goal = newGoal; // Adjust the goal to the nearest accessible cell
         } else {
@@ -188,7 +191,6 @@ function astar(grid, start, goal, maxMovementPoints) {
         return { path: path, totalMovementCost }; // Return path and total movement cost to the closest point
     }
 
-    return { path: [], totalMovementCost: 0 }; // Return empty path and 0 cost if no path is found
+    return { path: [], totalMovementCost: 0 }; // Return
 }
-
 module.exports = { astar };
