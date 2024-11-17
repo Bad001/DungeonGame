@@ -27,7 +27,7 @@ const MOVEMENT_COSTS = {
 
 // Function to determine if a cell is walkable
 function isWalkable(cell) {
-    return cell === 0; // Adjust based on your representation of walkable cells
+    return cell === 0;
 }
 
 // Helper function to find an adjacent accessible cell
@@ -55,7 +55,6 @@ function findAdjacentAccessibleCell(grid, goal, start) {
     return null; // No accessible neighbor found
 }
 
-// A* Pathfinding Algorithm
 function astar(grid, start, goal, maxMovementPoints) {
     const openSet = [];
     const closedSet = new Set();
@@ -191,6 +190,105 @@ function astar(grid, start, goal, maxMovementPoints) {
         return { path: path, totalMovementCost }; // Return path and total movement cost to the closest point
     }
 
-    return { path: [], totalMovementCost: 0 }; // Return
+    return { path: [], totalMovementCost: 0 };
 }
-module.exports = { astar };
+
+function lineOfSight(grid, start, goal) {
+    const openSet = [];
+    const closedSet = new Set();
+
+    // Heuristic function using Chebyshev distance
+    function heuristic(a, b) {
+        return Math.max(Math.abs(a.x - b.x), Math.abs(a.y - b.y)); // Chebyshev distance
+    }
+
+    class SimpleNode {
+        constructor(x, y, g, h, f, parent = null) {
+            this.x = x;
+            this.y = y;
+            this.g = g; // Cost from start to current node
+            this.h = h; // Heuristic estimate to goal
+            this.f = f; // Total cost (f = g + h)
+            this.parent = parent; // Parent node for path reconstruction
+        }
+    }
+
+    // Function to check if a cell is walkable
+    function isWalkable(cell, x, y) {
+        return cell === 0 || (x === goal[0] && y === goal[1]); // 0 is walkable or if it's the goal
+    }
+
+    // Movement cost function
+    function getMovementCost(current, neighbor) {
+        if (current.x !== neighbor.x && current.y !== neighbor.y) {
+            // Diagonal movement (cost of 3)
+            return 3;
+        }
+        // Straight movement (cost of 2)
+        return 2;
+    }
+
+    const startNode = new SimpleNode(start[0], start[1], 0, heuristic(start, goal), 0);
+    startNode.f = startNode.g + startNode.h;
+    openSet.push(startNode);
+
+    while (openSet.length > 0) {
+        openSet.sort((a, b) => a.f - b.f);
+        const current = openSet.shift();
+
+        if (current.x === goal[0] && current.y === goal[1]) {
+            // Path found, reconstruct path and return it
+            const path = [];
+            let temp = current;
+            while (temp) {
+                path.push([temp.x, temp.y]);
+                temp = temp.parent;
+            }
+            path.reverse(); // Return the path from start to goal
+            return { path: path, totalCost: current.g }; // Also return the total cost (g value)
+        }
+
+        closedSet.add(`${current.x},${current.y}`);
+
+        // Neighbors in 8 directions (up, down, left, right, and diagonals)
+        const neighbors = [
+            [current.x - 1, current.y], // left
+            [current.x + 1, current.y], // right
+            [current.x, current.y - 1], // up
+            [current.x, current.y + 1], // down
+            [current.x - 1, current.y - 1], // top-left diagonal
+            [current.x + 1, current.y - 1], // top-right diagonal
+            [current.x - 1, current.y + 1], // bottom-left diagonal
+            [current.x + 1, current.y + 1], // bottom-right diagonal
+        ];
+
+        for (const [nx, ny] of neighbors) {
+            if (nx >= 0 && ny >= 0 && nx < grid.length && ny < grid[0].length && isWalkable(grid[nx][ny], nx, ny)) {
+                const neighborKey = `${nx},${ny}`;
+                if (closedSet.has(neighborKey)) continue;
+
+                const movementCost = getMovementCost(current, { x: nx, y: ny });
+                const gScore = current.g + movementCost;
+                const hScore = heuristic({ x: nx, y: ny }, { x: goal[0], y: goal[1] });
+                const fScore = gScore + hScore;
+
+                const existingNode = openSet.find(node => node.x === nx && node.y === ny);
+                if (!existingNode || gScore < existingNode.g) {
+                    const newNode = new SimpleNode(nx, ny, gScore, hScore, fScore, current);
+                    if (!existingNode) {
+                        openSet.push(newNode);
+                    } else {
+                        existingNode.g = gScore;
+                        existingNode.h = hScore;
+                        existingNode.f = fScore;
+                        existingNode.parent = current;
+                    }
+                }
+            }
+        }
+    }
+
+    return { path: [], totalCost: -1 }; // Return empty path and a cost of -1 if goal is unreachable
+}
+
+module.exports = { astar, lineOfSight };

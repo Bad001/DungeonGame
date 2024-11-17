@@ -64,9 +64,9 @@ class Character {                          // Character is a Superclass
     set setRange(range) {
         this.range = range;
     }
-    attack(enemy) {
-        enemy.reduceHp((this.damage));
-        return enemy;
+    attack(target) {
+        target.reduceHp = Math.floor((this.damage/target.getAc));
+        return target;
     }
     levelUp(stat) {
         switch(stat) {

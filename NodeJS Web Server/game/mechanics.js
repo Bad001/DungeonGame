@@ -180,15 +180,15 @@ class Game {
                         if(this.currentLevelDungeon[coordinates[0]][coordinates[1]] === 0) {
                             const path = pathfinding.astar(this.currentLevelDungeon, this.player.getPosition, coordinates, this.player.getSpeed);
                             console.log(path);
-                            if((this.player.getSpeed - path['totalMovementCost']) >= 0 && path['totalMovementCost'] != 0) {
+                            if((this.player.getSpeed - path['totalMovementCost']) >= 0) {
                                 this.currentLevelDungeon[this.player.getPosition[0]][this.player.getPosition[1]] = 0;
-                                this.player.move = coordinates;
+                                this.player.move = path['path'].slice(-1)[0];
                                 this.currentLevelDungeon[this.player.getPosition[0]][this.player.getPosition[1]] = this.player;
                                 this.player.setSpeed = (this.player.getSpeed - path['totalMovementCost']);
                                 this.socket.emit('playerPhase', this.currentLevelDungeon, this.player);
                             }
-                            else {
-                                this.socket.emit('playerPhase', 'You can\'t reach that position!');    
+                            if(path['totalMovementCost'] === 0) {
+                                this.socket.emit('playerPhase', 'You can\'t reach that position!');
                             }
                         }
                         else {
@@ -197,7 +197,15 @@ class Game {
                         break;
                     case 'attack':
                         if(this.currentLevelDungeon[coordinates[0]][coordinates[1]] instanceof character.Enemy) {
-                            this.socket.emit('playerPhase', this.currentLevelDungeon);
+                            const lineOfSight = pathfinding.lineOfSight(this.currentLevelDungeon, this.player.getPosition, coordinates);
+                            console.log(lineOfSight);
+                            if((this.player.getRange - lineOfSight['totalCost']) >= 0) {
+                                this.currentLevelDungeon[coordinates[0]][coordinates[1]] = this.player.attack(this.currentLevelDungeon[coordinates[0]][coordinates[1]]);
+                                this.socket.emit('playerPhase', this.currentLevelDungeon);
+                            }
+                            else {
+                                this.socket.emit('playerPhase', 'You can\'t reach that position!');
+                            }
                         }
                         else {
                             this.socket.emit('playerPhase', 'You can\'t attack that!');

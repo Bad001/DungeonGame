@@ -33,7 +33,7 @@ export class GameComponent implements OnDestroy {
   energyDice: any[] = [];   // Random energyDice for energyDice Phase
   dungeon:any [] = [];      // Map of the current dungeon
   dungeonLevel: number = 0; // Current Dungeon Level Index
-  enemyInfo:any = {};
+  enemyInfo:any = {};       // Only for presets
   playerInfo:any = {};
 
   constructor(private GameService: GameService) {

@@ -20,7 +20,7 @@ export class ReplaceNumberWithDiceDirective {
   constructor(private element: ElementRef) {}
 
   ngAfterContentInit() {
-    if(typeof this.appReplaceNumberWithDice === 'object' && this.appReplaceNumberWithDice !== null) {
+    if(typeof this.appReplaceNumberWithDice === 'object') {
       this.element.nativeElement.innerHTML = this.appReplaceNumberWithDice['hp'];
       if(this.appReplaceNumberWithDice['name'] != 'Player') {
         this.element.nativeElement.style.color = 'darkred';

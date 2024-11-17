@@ -10,90 +10,92 @@
     <div class="returnHomeLink"><a routerLink="/" dataOnHover=">Return Home<"><span class="linkLabel">> Return Home <</span></a></div>
 </ng-container>
 <ng-container *ngIf="isCharacterBeenChosen">
-    <div class="title">
-        <h1 class="levelCounter">Dungeon Level {{dungeonLevel+1}}</h1>
-    </div>
-    <div class="center">
-        <div class="game-section center">
-            <app-character [character]="character" [isSelectionPhase]="!isCharacterBeenChosen"></app-character>
-            <ng-container *ngIf="isEnergyPhase">
-                <div>
-                    <button dataOnHover=">Use Ability<"><span class="buttonLabel">> Use Ability <</span></button>
-                </div>
-            </ng-container>
+    <ng-container>
+        <div class="title">
+            <h1 class="levelCounter">Dungeon Level {{dungeonLevel+1}}</h1>
         </div>
-        <div class="game-section center">
-            <table class="dungeon">
-                <tr *ngFor="let row of dungeon; index as i">
-                    <td *ngFor="let column of dungeon; index as j" [appReplaceNumberWithDice]="dungeon[i][j]" appRenderGameMap (click)="setCoordinates([i,j])">{{dungeon[i][j]}}</td>
-                </tr>
-            </table>
-            <table class="stats">
-                <tr>
-                    <th></th>
-                    <th class="hp">HP</th>
-                    <th class="mov">MOV</th>
-                    <th class="dmg">DMG</th>
-                    <th class="def">DEF</th>
-                    <th class="rng">RNG</th>
-                </tr>
-                <tr>
-                    <td class="tableDivider">{{enemyInfo.name}}</td>
-                    <td class="tableDivider">{{enemyInfo.hp}}</td>
-                    <td class="tableDivider">{{enemyInfo.speed}}</td>
-                    <td class="tableDivider">{{enemyInfo.damage}}</td>
-                    <td class="tableDivider">{{enemyInfo.ac}}</td>
-                    <td class="tableDivider">{{enemyInfo.range}}</td>
-                </tr>
-                <tr>
-                    <td>{{playerInfo.name}}</td>
-                    <td>{{playerInfo.hp}}</td>
-                    <ng-container *ngIf="isEnergyPhase; else confirmedStats">
-                        <td>{{assignedStats[0]+playerInfo.speed}}</td>
-                        <td>{{assignedStats[1]+playerInfo.damage}}</td>
-                        <td>{{assignedStats[2]+playerInfo.ac}}</td>
-                    </ng-container>
-                    <ng-template #confirmedStats>
-                        <td>{{playerInfo.speed}}</td>
-                        <td>{{playerInfo.damage}}</td>
-                        <td>{{playerInfo.ac}}</td>
-                    </ng-template>
-                    <td>{{playerInfo.range}}</td>
-                </tr>
-            </table>
-        </div>
-        <div class="game-section center">
-            <a routerLink="/" class="linkLabel giveUp" dataOnHover=">Give Up<"><span class="linkLabel">> Give Up <</span></a>
-            <ng-container *ngIf="isEnergyPhase">
-                <h2>Energy Phase</h2>
-                    <div class="energyDiceResults">
-                        <button class="energyDie" *ngFor="let die of energyDice" appReplaceNumberWithDice (click)="assignDie(die)">{{die}}</button>
+        <div class="center">
+            <div class="game-section center">
+                <app-character [character]="character" [isSelectionPhase]="!isCharacterBeenChosen"></app-character>
+                <ng-container *ngIf="isEnergyPhase">
+                    <div>
+                        <button dataOnHover=">Use Ability<"><span class="buttonLabel">> Use Ability <</span></button>
                     </div>
-                    <ng-container *ngIf="isDieButtonPressed">
-                        <div>
-                            <input type="radio" id="stat1" name="stats" (click)="radioChecked(0)"/><label for='stat1'>MOV</label>
-                            <input type="radio" id="stat2" name="stats" (click)="radioChecked(1)"/><label for='stat2'>DMG</label>
-                            <input type="radio" id="stat3" name="stats" (click)="radioChecked(2)"/><label for='stat3'>DEF</label>
-                        </div>
-                        <ng-container *ngIf="!assignedStats.includes(0)">
-                            <div>
-                                <button class="confirmDiceButton" dataOnHover=">CONFIRM<" (click)="confirmStat()"><span class="buttonLabel">> CONFIRM <</span></button>
-                            </div>
+                </ng-container>
+            </div>
+            <div class="game-section center">
+                <table class="dungeon">
+                    <tr *ngFor="let row of dungeon; index as i">
+                        <td *ngFor="let column of dungeon; index as j" [appReplaceNumberWithDice]="dungeon[i][j]" [appRenderGameMap]="dungeon[i][j]" (click)="setCoordinates([i,j])">{{dungeon[i][j]}}</td>
+                    </tr>
+                </table>
+                <table class="stats">
+                    <tr>
+                        <th></th>
+                        <th class="hp">HP</th>
+                        <th class="mov">MOV</th>
+                        <th class="dmg">DMG</th>
+                        <th class="def">DEF</th>
+                        <th class="rng">RNG</th>
+                    </tr>
+                    <tr>
+                        <td class="tableDivider">{{enemyInfo.name}}</td>
+                        <td class="tableDivider">{{enemyInfo.hp}}</td>
+                        <td class="tableDivider">{{enemyInfo.speed}}</td>
+                        <td class="tableDivider">{{enemyInfo.damage}}</td>
+                        <td class="tableDivider">{{enemyInfo.ac}}</td>
+                        <td class="tableDivider">{{enemyInfo.range}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{playerInfo.name}}</td>
+                        <td>{{playerInfo.hp}}</td>
+                        <ng-container *ngIf="isEnergyPhase; else confirmedStats">
+                            <td>{{assignedStats[0]+playerInfo.speed}}</td>
+                            <td>{{assignedStats[1]+playerInfo.damage}}</td>
+                            <td>{{assignedStats[2]+playerInfo.ac}}</td>
                         </ng-container>
-                    </ng-container>
-            </ng-container>
-            <ng-container *ngIf="!isEnergyPhase">
-                <h2>Actions</h2>
-                <ul>
-                    <li *ngIf="playerAction != 'attack'"><button dataOnHover=">Move<" (click)="move()"><span class="buttonLabel">> Move <</span></button></li>
-                    <li *ngIf="playerAction != 'move'"><button dataOnHover=">Attack<" (click)="attack()"><span class="buttonLabel">> Attack <</span></button></li>
-                    <li *ngIf="playerAction != '' && coordinates.length != 0"><button dataOnHover=">Confirm<" (click)="confirmAction()"><span class="buttonLabel">> Confirm <</span></button></li>
-                    <li><button dataOnHover=">End Turn<" (click)="endTurn()"><span class="buttonLabel">> End Turn <</span></button></li>
-                </ul>
-                <p class="hint">Click a cell of map to set coordinates</p>
-                <h2 *ngIf="coordinates.length != 0">{{coordinates}}</h2>
-            </ng-container>
+                        <ng-template #confirmedStats>
+                            <td>{{playerInfo.speed}}</td>
+                            <td>{{playerInfo.damage}}</td>
+                            <td>{{playerInfo.ac}}</td>
+                        </ng-template>
+                        <td>{{playerInfo.range}}</td>
+                    </tr>
+                </table>
+            </div>
+            <div class="game-section center">
+                <a routerLink="/" class="linkLabel giveUp" dataOnHover=">Give Up<"><span class="linkLabel">> Give Up <</span></a>
+                <ng-container *ngIf="isEnergyPhase">
+                    <h2>Energy Phase</h2>
+                        <div class="energyDiceResults">
+                            <button class="energyDie" *ngFor="let die of energyDice" appReplaceNumberWithDice (click)="assignDie(die)">{{die}}</button>
+                        </div>
+                        <ng-container *ngIf="isDieButtonPressed">
+                            <div>
+                                <input type="radio" id="stat1" name="stats" (click)="radioChecked(0)"/><label for='stat1'>MOV</label>
+                                <input type="radio" id="stat2" name="stats" (click)="radioChecked(1)"/><label for='stat2'>DMG</label>
+                                <input type="radio" id="stat3" name="stats" (click)="radioChecked(2)"/><label for='stat3'>DEF</label>
+                            </div>
+                            <ng-container *ngIf="!assignedStats.includes(0)">
+                                <div>
+                                    <button class="confirmDiceButton" dataOnHover=">CONFIRM<" (click)="confirmStat()"><span class="buttonLabel">> CONFIRM <</span></button>
+                                </div>
+                            </ng-container>
+                        </ng-container>
+                </ng-container>
+                <ng-container *ngIf="!isEnergyPhase">
+                    <h2>Actions</h2>
+                    <ul>
+                        <li *ngIf="playerAction != 'attack'"><button dataOnHover=">Move<" (click)="move()"><span class="buttonLabel">> Move <</span></button></li>
+                        <li *ngIf="playerAction != 'move'"><button dataOnHover=">Attack<" (click)="attack()"><span class="buttonLabel">> Attack <</span></button></li>
+                        <li *ngIf="playerAction != '' && coordinates.length != 0"><button dataOnHover=">Confirm<" (click)="confirmAction()"><span class="buttonLabel">> Confirm <</span></button></li>
+                        <li><button dataOnHover=">End Turn<" (click)="endTurn()"><span class="buttonLabel">> End Turn <</span></button></li>
+                    </ul>
+                    <p class="hint">Click a cell of map to set coordinates</p>
+                    <h2 *ngIf="coordinates.length != 0">{{coordinates[0]+1}},{{coordinates[1]+1}}</h2>
+                </ng-container>
+            </div>
         </div>
-    </div>
+    </ng-container>
 </ng-container>
 <router-outlet></router-outlet>
