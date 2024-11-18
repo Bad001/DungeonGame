@@ -14,6 +14,7 @@ class Game {
         this.energyDice = [0,0,0];
         this.assignedStats = [0,0,0];
         this.originalSpeed = 0;
+        this.originalDamage = 0;
         // Indexes
         this.currentLevelIndex = 0;
         // Flags
@@ -27,111 +28,127 @@ class Game {
     enterLevel() { // Presets method
         this.currentLevelDungeon = [];
         this.enemies = [];
+        let enemy = {};
         switch (this.currentLevelIndex) {
             case 0:
+                enemy = minions[0];
                 this.currentLevelDungeon = JSON.parse(JSON.stringify(dungeon[0]));
                 this.currentLevelDungeon[4][0] = this.player;
-                this.currentLevelDungeon[0][3] = new character.Enemy(minions[0].name, minions[0].hp, minions[0].speed, minions[0].damage, minions[0].ac, minions[0].range, [0,3]);
-                this.currentLevelDungeon[2][4] = new character.Enemy(minions[0].name, minions[0].hp, minions[0].speed, minions[0].damage, minions[0].ac, minions[0].range, [2,4]);
+                this.currentLevelDungeon[0][3] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [0,3]);
+                this.currentLevelDungeon[2][4] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [2,4]);
                 this.enemies.push(this.currentLevelDungeon[0][3]);
                 this.enemies.push(this.currentLevelDungeon[2][4]);
                 break;
             case 1:
+                enemy = minions[1];
                 this.currentLevelDungeon = JSON.parse(JSON.stringify(dungeon[1]));
                 this.player.move = [4,4];
                 this.currentLevelDungeon[4][4] = this.player;
-                this.currentLevelDungeon[0][2] = new character.Enemy(minions[1].name, minions[1].hp, minions[1].speed, minions[1].damage, minions[1].ac, minions[1].range, [0,2]);
-                this.currentLevelDungeon[1][0] = new character.Enemy(minions[1].name, minions[1].hp, minions[1].speed, minions[1].damage, minions[1].ac, minions[1].range, [1,0]);
+                this.currentLevelDungeon[0][2] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [0,2]);
+                this.currentLevelDungeon[1][0] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [1,0]);
                 this.enemies.push(this.currentLevelDungeon[0][2]);
                 this.enemies.push(this.currentLevelDungeon[1][0]);
                 break;
             case 2:
+                enemy = bosses[0];
                 this.currentLevelDungeon = JSON.parse(JSON.stringify(dungeon[2]));
                 this.player.move = [4,4];
                 this.currentLevelDungeon[4][4] = this.player;
-                this.currentLevelDungeon[2][2] = new character.Enemy(bosses[0].name, bosses[0].hp, bosses[0].speed, bosses[0].damage, bosses[0].ac, bosses[0].range, [2,2]);
+                this.currentLevelDungeon[2][2] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [2,2]);
                 this.enemies.push(this.currentLevelDungeon[2][2]);
                 break;
             case 3:
+                enemy = minions[3];
                 this.currentLevelDungeon = JSON.parse(JSON.stringify(dungeon[3]));
                 this.player.move = [4,4];
                 this.currentLevelDungeon[4][4] = this.player;
-                this.currentLevelDungeon[0][1] = new character.Enemy(minions[3].name, minions[3].hp, minions[3].speed, minions[3].damage, minions[3].ac, minions[3].range, [0,1]);
+                this.currentLevelDungeon[0][1] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [0,1]);
                 this.enemies.push(this.currentLevelDungeon[0][1]);
                 break;
             case 4:
+                enemy = minions[0];
                 this.currentLevelDungeon = JSON.parse(JSON.stringify(dungeon[0]));
                 this.player.move = [4,0];
                 this.currentLevelDungeon[4][0] = this.player;
-                this.currentLevelDungeon[0][1] = new character.Enemy(minions[0].name, minions[0].hp, minions[0].speed, minions[0].damage, minions[0].ac, minions[0].range, [0,1]);
-                this.currentLevelDungeon[1][4] = new character.Enemy(minions[0].name, minions[0].hp, minions[0].speed, minions[0].damage, minions[0].ac, minions[0].range, [1,4]);
-                this.currentLevelDungeon[4][4] = new character.Enemy(minions[0].name, minions[0].hp, minions[0].speed, minions[0].damage, minions[0].ac, minions[0].range, [4,4]);
+                this.currentLevelDungeon[0][1] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [0,1]);
+                this.currentLevelDungeon[1][4] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [1,4]);
+                this.currentLevelDungeon[4][4] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [4,4]);
                 this.enemies.push(this.currentLevelDungeon[0][1]);
                 this.enemies.push(this.currentLevelDungeon[1][4]);
                 this.enemies.push(this.currentLevelDungeon[4][4]);
                 break;
             case 5:
+                enemy = bosses[1];
                 this.currentLevelDungeon = JSON.parse(JSON.stringify(dungeon[4]));
                 this.player.move = [4,4];
                 this.currentLevelDungeon[4][4] = this.player;
-                this.currentLevelDungeon[2][2] = new character.Enemy(bosses[1].name, bosses[1].hp, bosses[1].speed, bosses[1].damage, bosses[1].ac, bosses[1].range, [2,2]);
+                this.currentLevelDungeon[2][2] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [2,2]);
                 this.enemies.push(this.currentLevelDungeon[2][2]);
                 break;
             case 6:
+                enemy = minions[2];
                 this.currentLevelDungeon = JSON.parse(JSON.stringify(dungeon[5]));
                 this.player.move = [4,0];
                 this.currentLevelDungeon[4][0] = this.player;
-                this.currentLevelDungeon[1][2] = new character.Enemy(minions[2].name, minions[2].hp, minions[2].speed, minions[2].damage, minions[2].ac, minions[2].range, [1,2]);
-                this.currentLevelDungeon[3][4] = new character.Enemy(minions[2].name, minions[2].hp, minions[2].speed, minions[2].damage, minions[2].ac, minions[2].range, [3,4]);
+                this.currentLevelDungeon[1][2] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [1,2]);
+                this.currentLevelDungeon[3][4] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [3,4]);
                 this.enemies.push(this.currentLevelDungeon[1][2]);
                 this.enemies.push(this.currentLevelDungeon[3][4]);
                 break;
             case 7:
+                enemy = minions[3];
                 this.currentLevelDungeon = JSON.parse(JSON.stringify(dungeon[3]));
                 this.player.move = [4,4];
                 this.currentLevelDungeon[4][4] = this.player;
-                this.currentLevelDungeon[0][3] = new character.Enemy(minions[3].name, minions[3].hp, minions[3].speed, minions[3].damage, minions[3].ac, minions[3].range, [0,3]);
-                this.currentLevelDungeon[4][1] = new character.Enemy(minions[3].name, minions[3].hp, minions[3].speed, minions[3].damage, minions[3].ac, minions[3].range, [4,1]);
+                this.currentLevelDungeon[0][3] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [0,3]);
+                this.currentLevelDungeon[4][1] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [4,1]);
                 this.enemies.push(this.currentLevelDungeon[0][3]);
                 this.enemies.push(this.currentLevelDungeon[4][1]);
                 break;
             case 8:
+                enemy = bosses[2];
                 this.currentLevelDungeon = JSON.parse(JSON.stringify(dungeon[2]));
                 this.player.move = [4,4];
                 this.currentLevelDungeon[4][4] = this.player;
-                this.currentLevelDungeon[2][2] = new character.Enemy(bosses[2].name, bosses[2].hp, bosses[2].speed, bosses[2].damage, bosses[2].ac, bosses[2].range, [2,2]);
+                this.currentLevelDungeon[2][2] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [2,2]);
                 this.enemies.push(this.currentLevelDungeon[2][2]);
                 break;
             case 9:
+                enemy = minions[1];
                 this.currentLevelDungeon = JSON.parse(JSON.stringify(dungeon[1]));
                 this.player.move = [4,4];
                 this.currentLevelDungeon[4][4] = this.player;
-                this.currentLevelDungeon[0][4] = new character.Enemy(minions[1].name, minions[1].hp, minions[1].speed, minions[1].damage, minions[1].ac, minions[1].range, [0,4]);
-                this.currentLevelDungeon[1][2] = new character.Enemy(minions[1].name, minions[1].hp, minions[1].speed, minions[1].damage, minions[1].ac, minions[1].range, [1,2]);
-                this.currentLevelDungeon[2][1] = new character.Enemy(minions[1].name, minions[1].hp, minions[1].speed, minions[1].damage, minions[1].ac, minions[1].range, [2,1]);
-                this.currentLevelDungeon[3][0] = new character.Enemy(minions[1].name, minions[1].hp, minions[1].speed, minions[1].damage, minions[1].ac, minions[1].range, [3,0]);
+                this.currentLevelDungeon[0][4] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [0,4]);
+                this.currentLevelDungeon[1][2] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [1,2]);
+                this.currentLevelDungeon[2][1] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [2,1]);
+                this.currentLevelDungeon[3][0] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [3,0]);
                 this.enemies.push(this.currentLevelDungeon[0][4]);
                 this.enemies.push(this.currentLevelDungeon[1][2]);
                 this.enemies.push(this.currentLevelDungeon[2][1]);
                 this.enemies.push(this.currentLevelDungeon[3][0]);
                 break;
             case 10:
+                enemy = minions[2];
                 this.currentLevelDungeon = JSON.parse(JSON.stringify(dungeon[5]));
                 this.player.move = [4,0];
                 this.currentLevelDungeon[4][0] = this.player;
-                this.currentLevelDungeon[0][1] = new character.Enemy(minions[2].name, minions[2].hp, minions[2].speed, minions[2].damage, minions[2].ac, minions[2].range, [0,1]);
-                this.currentLevelDungeon[0][3] = new character.Enemy(minions[2].name, minions[2].hp, minions[2].speed, minions[2].damage, minions[2].ac, minions[2].range, [0,3]);
-                this.currentLevelDungeon[2][4] = new character.Enemy(minions[2].name, minions[2].hp, minions[2].speed, minions[2].damage, minions[2].ac, minions[2].range, [2,4]);
+                this.currentLevelDungeon[0][1] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [0,1]);
+                this.currentLevelDungeon[0][3] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [0,3]);
+                this.currentLevelDungeon[2][4] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [2,4]);
                 this.enemies.push(this.currentLevelDungeon[0][1]);
                 this.enemies.push(this.currentLevelDungeon[0][3]);
                 this.enemies.push(this.currentLevelDungeon[2][4]);
                 break;
             case 11:
+                enemy = bosses[3];
                 this.currentLevelDungeon = JSON.parse(JSON.stringify(dungeon[6]));
                 this.player.move = [4,4];
                 this.currentLevelDungeon[4][4] = this.player;
-                this.currentLevelDungeon[2][2] = new character.Enemy(bosses[3].name, bosses[3].hp, bosses[3].speed, bosses[3].damage, bosses[3].ac, bosses[3].range, [2,2]);
+                this.currentLevelDungeon[2][2] = new character.Enemy(enemy.name, enemy.hp, enemy.speed, enemy.damage, enemy.ac, enemy.range, [2,2]);
                 this.enemies.push(this.currentLevelDungeon[2][2]);
+                break;
+            case 12:
+                // Here will go the query to save the game outcome of player in DB
                 break;
             default: console.log("Error at enterLevel function!");
         }
@@ -154,6 +171,7 @@ class Game {
                 else {
                     this.isEnergyPhase = false;
                     this.originalSpeed = this.player.getSpeed;
+                    this.originalDamage = this.player.getDamage;
                     this.player.setSpeed = this.assignedStats[0] + this.player.getSpeed;
                     this.player.setDamage = this.assignedStats[1] + this.player.getDamage;
                     this.player.setAc = this.assignedStats[2] + this.player.getAc;
@@ -203,15 +221,15 @@ class Game {
                                     this.socket.emit('playerPhase', 'Your Damage is too low!');
                                 }
                                 else {
-                                    this.currentLevelDungeon[coordinates[0]][coordinates[1]] = this.player.attack(this.currentLevelDungeon[coordinates[0]][coordinates[1]]);
-                                    if(this.currentLevelDungeon[coordinates[0]][coordinates[1]].getHp === 0) {
+                                    const result = this.player.attack(this.currentLevelDungeon[coordinates[0]][coordinates[1]]);
+                                    this.currentLevelDungeon[coordinates[0]][coordinates[1]] = result['target'];
+                                    this.player.setDamage = (this.player.getDamage - (this.currentLevelDungeon[coordinates[0]][coordinates[1]].getAc * result['damageInflicted']));
+                                    if(this.currentLevelDungeon[coordinates[0]][coordinates[1]].getHp <= 0) {
                                         const index = this.enemies.indexOf(this.currentLevelDungeon[coordinates[0]][coordinates[1]]);
-                                        if (index > -1) {                  // only splice array when item is found
-                                            this.enemies.splice(index, 1); // 2° parameter means remove one item only
-                                        }
+                                        this.enemies.splice(index, 1);
                                         this.currentLevelDungeon[coordinates[0]][coordinates[1]] = 0;
                                     }
-                                    this.socket.emit('playerPhase', this.currentLevelDungeon);
+                                    this.socket.emit('playerPhase', this.currentLevelDungeon, this.player);
                                 }
                             }
                             else {
@@ -247,7 +265,7 @@ class Game {
     enemyAttackPhase() {
         console.log('Enemy attack phase of Player ' + this.socket.id);
         this.player.setSpeed = this.originalSpeed;
-        this.player.setDamage = this.player.getDamage - this.assignedStats[1];
+        this.player.setDamage = this.originalDamage;
         this.player.setAc =  this.player.getAc - this.assignedStats[2];
         this.assignedStats = [0,0,0];
         this.socket.emit('enemyPhase', this.currentLevelDungeon, this.player);

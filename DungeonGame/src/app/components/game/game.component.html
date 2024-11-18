@@ -10,7 +10,7 @@
     <div class="returnHomeLink"><a routerLink="/" dataOnHover=">Return Home<"><span class="linkLabel">> Return Home <</span></a></div>
 </ng-container>
 <ng-container *ngIf="isCharacterBeenChosen">
-    <ng-container>
+    <ng-container *ngIf="dungeonLevel != 12 && playerInfo.hp != 0; else endGameTemplate">
         <div class="title">
             <h1 class="levelCounter">Dungeon Level {{dungeonLevel+1}}</h1>
         </div>
@@ -49,12 +49,12 @@
                     <tr>
                         <td>{{playerInfo.name}}</td>
                         <td>{{playerInfo.hp}}</td>
-                        <ng-container *ngIf="isEnergyPhase; else confirmedStats">
+                        <ng-container *ngIf="isEnergyPhase; else confirmedStatsTemplate">
                             <td>{{assignedStats[0]+playerInfo.speed}}</td>
                             <td>{{assignedStats[1]+playerInfo.damage}}</td>
                             <td>{{assignedStats[2]+playerInfo.ac}}</td>
                         </ng-container>
-                        <ng-template #confirmedStats>
+                        <ng-template #confirmedStatsTemplate>
                             <td>{{playerInfo.speed}}</td>
                             <td>{{playerInfo.damage}}</td>
                             <td>{{playerInfo.ac}}</td>
@@ -97,5 +97,17 @@
             </div>
         </div>
     </ng-container>
+    <ng-template #endGameTemplate>
+        <h1>
+            <div class="title">
+                <h1>{{gameOutcome}}</h1>
+            </div>
+            <div class="center">
+                <div class="returnHomeLink">
+                    <a routerLink="/" dataOnHover=">Return Home<"><span class="linkLabel">> Return Home <</span></a>
+                </div>
+            </div>
+        </h1>
+    </ng-template>
 </ng-container>
 <router-outlet></router-outlet>

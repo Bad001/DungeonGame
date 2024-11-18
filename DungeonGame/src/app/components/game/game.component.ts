@@ -35,12 +35,17 @@ export class GameComponent implements OnDestroy {
   dungeonLevel: number = 0; // Current Dungeon Level Index
   enemyInfo:any = {};       // Only for presets
   playerInfo:any = {};
+  // Game outcome and points
+  gameOutcome: string = 'You Lose!';
 
   constructor(private GameService: GameService) {
     this.GameService.setupSocketConnection();
     this.GameService.listenToServer('presets').subscribe((data) => {
       this.dungeon = data[0];
       this.dungeonLevel = data[1];
+      if(this.dungeonLevel == 12) {
+        this.gameOutcome = 'You Win!';
+      }
       this.enemyInfo = data[2];
       this.playerInfo = data[3];
     });
