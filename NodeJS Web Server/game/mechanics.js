@@ -30,7 +30,6 @@ class Game {
         switch (this.currentLevelIndex) {
             case 0:
                 this.currentLevelDungeon = JSON.parse(JSON.stringify(dungeon[0]));
-                this.player.move = [4,0];
                 this.currentLevelDungeon[4][0] = this.player;
                 this.currentLevelDungeon[0][3] = new character.Enemy(minions[0].name, minions[0].hp, minions[0].speed, minions[0].damage, minions[0].ac, minions[0].range, [0,3]);
                 this.currentLevelDungeon[2][4] = new character.Enemy(minions[0].name, minions[0].hp, minions[0].speed, minions[0].damage, minions[0].ac, minions[0].range, [2,4]);
@@ -200,8 +199,20 @@ class Game {
                             const lineOfSight = pathfinding.lineOfSight(this.currentLevelDungeon, this.player.getPosition, coordinates);
                             console.log(lineOfSight);
                             if((this.player.getRange - lineOfSight['totalCost']) >= 0) {
-                                this.currentLevelDungeon[coordinates[0]][coordinates[1]] = this.player.attack(this.currentLevelDungeon[coordinates[0]][coordinates[1]]);
-                                this.socket.emit('playerPhase', this.currentLevelDungeon);
+                                if(this.player.getDamage < this.enemies[0].getAc) {
+                                    this.socket.emit('playerPhase', 'Your Damage is too low!');
+                                }
+                                else {
+                                    this.currentLevelDungeon[coordinates[0]][coordinates[1]] = this.player.attack(this.currentLevelDungeon[coordinates[0]][coordinates[1]]);
+                                    if(this.currentLevelDungeon[coordinates[0]][coordinates[1]].getHp === 0) {
+                                        const index = this.enemies.indexOf(this.currentLevelDungeon[coordinates[0]][coordinates[1]]);
+                                        if (index > -1) {                  // only splice array when item is found
+                                            this.enemies.splice(index, 1); // 2° parameter means remove one item only
+                                        }
+                                        this.currentLevelDungeon[coordinates[0]][coordinates[1]] = 0;
+                                    }
+                                    this.socket.emit('playerPhase', this.currentLevelDungeon);
+                                }
                             }
                             else {
                                 this.socket.emit('playerPhase', 'You can\'t reach that position!');
@@ -243,12 +254,13 @@ class Game {
     }
     
     levelUpOrRest() {
-        if(levelUp) {
-            this.player.levelUp(/*from 0 to 3 to choose the stat*/);
-        }
-        else {
-            this.player.rest();
-        }
+        console.log("Level Up or Rest Phase!");
+        //if(levelUp) {
+        //    this.player.levelUp(/*from 0 to 3 to choose the stat*/);
+        //}
+        //else {
+        //    this.player.rest();
+        //}
     }
 
     startGame(role) {
