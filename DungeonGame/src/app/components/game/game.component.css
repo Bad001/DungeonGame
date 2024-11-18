@@ -48,6 +48,12 @@ h2 {
     text-align: center;
 }
 
+.levelUpOrRest {
+    display: block;
+    margin: auto;
+    text-align: center;
+}
+
 .dungeon, .dungeon td {
     border: 1px solid black;
     border-collapse: collapse;
@@ -153,4 +159,8 @@ button.energyDie:focus {
 
 .hint {
     font-size: 20px;
+}
+
+button:disabled {
+    opacity:0.5;
 }

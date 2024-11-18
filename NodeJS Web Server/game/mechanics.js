@@ -272,13 +272,22 @@ class Game {
     }
     
     levelUpOrRest() {
-        console.log("Level Up or Rest Phase!");
-        //if(levelUp) {
-        //    this.player.levelUp(/*from 0 to 3 to choose the stat*/);
-        //}
-        //else {
-        //    this.player.rest();
-        //}
+        return new Promise((resolve) => {
+            this.socket.emit('levelUpOrRest', true);
+            this.socket.on('levelUpOrRest', (data) => {
+                console.log(data);
+                const levelUp = data[0];
+                const stat = data[1];
+                if(levelUp) {
+                    this.player.levelUp(stat);
+                }
+                else {
+                    this.player.rest();
+                }
+                this.socket.emit('levelUpOrRest', false);
+                resolve();
+            });
+        });
     }
 
     startGame(role) {
@@ -299,9 +308,10 @@ class Game {
                 }
                 else {
                     this.currentLevelIndex++;
-                    this.levelUpOrRest();
-                    this.enterLevel();
-                    resolve(this.startGame());
+                    this.levelUpOrRest()
+                    .then(() => {return this.enterLevel()})
+                    .then(() => {resolve(this.startGame())})
+                    .catch(error => console.log(error));
                 }
             }
             else {

@@ -24,11 +24,15 @@ export class GameComponent implements OnDestroy {
   isCharacterBeenChosen: boolean = false;
   isEnergyPhase: boolean = false;
   isDieButtonPressed: boolean = false;
+  levelUpOrRest: boolean = false;
+  levelUp: boolean = false;
+  rest: boolean = false;
   // Client will send this data to Server  | Client --> Server
   assignedStats = [0,0,0];
   die: number = 0;
   coordinates: number[] = [];
   playerAction: string = '';
+  statToLevelUp: number = 4;
   // Client will listen to retrieve this data from Server  | Client <-- Server
   energyDice: any[] = [];   // Random energyDice for energyDice Phase
   dungeon:any [] = [];      // Map of the current dungeon
@@ -75,6 +79,9 @@ export class GameComponent implements OnDestroy {
         this.playerInfo = data[1];
       }
     });
+    this.GameService.listenToServer('levelUpOrRest').subscribe((data) => {
+      this.levelUpOrRest = data[0];
+    });
   }
 
   ngOnDestroy(): void {
@@ -103,6 +110,10 @@ export class GameComponent implements OnDestroy {
       this.energyDice.splice(index, 1);             // remove the selected die from energyDice array
     }
     this.die = 0;
+  }
+
+  chosenStat(radioValue: number) {
+    this.statToLevelUp = radioValue;
   }
 
   confirmStat() {
@@ -146,5 +157,41 @@ export class GameComponent implements OnDestroy {
     for(let i = 0; i < 3; i++) {
       this.assignedStats[i] = 0;
     }
+  }
+
+  levelUpButton() {
+    if(this.levelUp) {
+      this.levelUp = false;
+      this.statToLevelUp = 4;
+    }
+    else {
+      this.levelUp = true;
+    }
+  }
+
+  restButton() {
+    if(this.rest) {
+      this.rest = false;
+    }
+    else {
+      this.rest = true;
+    }
+  }
+
+  confirmChoiceOnEndLevel() {
+    if(this.levelUp) {
+      this.GameService.emit('levelUpOrRest', true, this.statToLevelUp);
+    }
+    else {
+      this.GameService.emit('levelUpOrRest', false);
+    }
+    this.statToLevelUp = 4;
+    this.levelUp = false;
+    this.rest = false;
+    this.levelUpOrRest = false;
+  }
+
+  giveUp() {
+    this.playerInfo.hp = 0;
   }
 }

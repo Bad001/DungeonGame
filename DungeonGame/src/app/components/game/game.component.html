@@ -10,7 +10,7 @@
     <div class="returnHomeLink"><a routerLink="/" dataOnHover=">Return Home<"><span class="linkLabel">> Return Home <</span></a></div>
 </ng-container>
 <ng-container *ngIf="isCharacterBeenChosen">
-    <ng-container *ngIf="dungeonLevel != 12 && playerInfo.hp != 0; else endGameTemplate">
+    <ng-container *ngIf="(dungeonLevel != 12 && playerInfo.hp != 0) && !levelUpOrRest">
         <div class="title">
             <h1 class="levelCounter">Dungeon Level {{dungeonLevel+1}}</h1>
         </div>
@@ -64,7 +64,7 @@
                 </table>
             </div>
             <div class="game-section center">
-                <a routerLink="/" class="linkLabel giveUp" dataOnHover=">Give Up<"><span class="linkLabel">> Give Up <</span></a>
+                <a class="linkLabel giveUp" dataOnHover=">Give Up<" (click)="giveUp()"><span class="linkLabel">> Give Up <</span></a>
                 <ng-container *ngIf="isEnergyPhase">
                     <h2>Energy Phase</h2>
                         <div class="energyDiceResults">
@@ -97,17 +97,37 @@
             </div>
         </div>
     </ng-container>
-    <ng-template #endGameTemplate>
-        <h1>
-            <div class="title">
-                <h1>{{gameOutcome}}</h1>
-            </div>
-            <div class="center">
-                <div class="returnHomeLink">
-                    <a routerLink="/" dataOnHover=">Return Home<"><span class="linkLabel">> Return Home <</span></a>
+    <ng-container *ngIf="levelUpOrRest">
+        <div class="title">
+            <h1>Choose Wisely...</h1>
+        </div>
+        <div class="levelUpOrRest center">
+            <button dataOnHover=">Level Up<" [disabled]="rest" (click)="levelUpButton()"><span class="buttonLabel">> Level Up <</span></button>
+            <button dataOnHover=">Rest<" [disabled]="levelUp" (click)="restButton()"><span class="buttonLabel">> Rest <</span></button>
+            <ng-container *ngIf="levelUp">
+                <div>
+                    <input type="radio" id="chosenStat1" name="chosenStat" (click)="chosenStat(0)"/><label for='chosenStat1'>MOV</label>
+                    <input type="radio" id="chosenStat2" name="chosenStat" (click)="chosenStat(1)"/><label for='chosenStat2'>DMG</label>
+                    <input type="radio" id="chosenStat3" name="chosenStat" (click)="chosenStat(2)"/><label for='chosenStat3'>DEF</label>
+                    <input type="radio" id="chosenStat4" name="chosenStat" (click)="chosenStat(3)"/><label for='chosenStat4'>RNG</label>
                 </div>
-            </div>
-        </h1>
-    </ng-template>
+            </ng-container>
+            <ng-container *ngIf="(statToLevelUp >= 0 && statToLevelUp < 4) || rest">
+                <button class="confirmDiceButton" dataOnHover=">CONFIRM<" (click)="confirmChoiceOnEndLevel()"><span class="buttonLabel">> CONFIRM <</span></button>
+            </ng-container>
+        </div>
+        <ng-container *ngIf="(dungeonLevel == 12) || (playerInfo.hp == 0)">
+            <h1>
+                <div class="title">
+                    <h1>{{gameOutcome}}</h1>
+                </div>
+                <div class="center">
+                    <div class="returnHomeLink">
+                        <a routerLink="/" dataOnHover=">Return Home<"><span class="linkLabel">> Return Home <</span></a>
+                    </div>
+                </div>
+            </h1>
+        </ng-container>
+    </ng-container>
 </ng-container>
 <router-outlet></router-outlet>
