@@ -116,18 +116,18 @@
                 <button class="confirmDiceButton" dataOnHover=">CONFIRM<" (click)="confirmChoiceOnEndLevel()"><span class="buttonLabel">> CONFIRM <</span></button>
             </ng-container>
         </div>
-        <ng-container *ngIf="(dungeonLevel == 12) || (playerInfo.hp == 0)">
-            <h1>
-                <div class="title">
-                    <h1>{{gameOutcome}}</h1>
+    </ng-container>
+    <ng-container *ngIf="(dungeonLevel == 12) || (playerInfo.hp == 0)">
+        <h1>
+            <div class="title">
+                <h1>{{gameOutcome}}</h1>
+            </div>
+            <div class="center">
+                <div class="returnHomeLink">
+                    <a routerLink="/" dataOnHover=">Return Home<"><span class="linkLabel">> Return Home <</span></a>
                 </div>
-                <div class="center">
-                    <div class="returnHomeLink">
-                        <a routerLink="/" dataOnHover=">Return Home<"><span class="linkLabel">> Return Home <</span></a>
-                    </div>
-                </div>
-            </h1>
-        </ng-container>
+            </div>
+        </h1>
     </ng-container>
 </ng-container>
 <router-outlet></router-outlet>

@@ -223,7 +223,7 @@ class Game {
                                 else {
                                     const result = this.player.attack(this.currentLevelDungeon[coordinates[0]][coordinates[1]]);
                                     this.currentLevelDungeon[coordinates[0]][coordinates[1]] = result['target'];
-                                    this.player.setDamage = (this.player.getDamage - (this.currentLevelDungeon[coordinates[0]][coordinates[1]].getAc * result['damageInflicted']));
+                                    this.player.setDamage = this.player.getDamage - (this.currentLevelDungeon[coordinates[0]][coordinates[1]].getAc * result['damageInflicted']);
                                     if(this.currentLevelDungeon[coordinates[0]][coordinates[1]].getHp <= 0) {
                                         const index = this.enemies.indexOf(this.currentLevelDungeon[coordinates[0]][coordinates[1]]);
                                         this.enemies.splice(index, 1);

@@ -1,4 +1,4 @@
-class Character {                          // Character is a Superclass
+class Character {                      // Character is a Superclass
     constructor() {                    // every new player starts with the following stats
         this.name = 'Player';
         this.hp = 6;
@@ -65,7 +65,10 @@ class Character {                          // Character is a Superclass
         this.range = range;
     }
     attack(enemy) {
-        const damage = Math.floor((this.damage/enemy.getAc));
+        let damage = Math.floor((this.damage/enemy.getAc));
+        if(damage >= enemy.getHp) {
+            damage = enemy.getHp;
+        }
         enemy.reduceHp = damage;
         return {target: enemy, damageInflicted: damage};
     }
