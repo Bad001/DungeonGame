@@ -102,8 +102,10 @@
             <h1>Choose Wisely...</h1>
         </div>
         <div class="levelUpOrRest center">
-            <button dataOnHover=">Level Up<" [disabled]="rest" (click)="levelUpButton()"><span class="buttonLabel">> Level Up <</span></button>
-            <button dataOnHover=">Rest<" [disabled]="levelUp" (click)="restButton()"><span class="buttonLabel">> Rest <</span></button>
+            <div class="levelUpOrRest-button-container">
+                <button dataOnHover=">Level Up<" [disabled]="rest" (click)="levelUpButton()"><span class="buttonLabel">> Level Up <</span></button>
+                <button dataOnHover=">Rest<" [disabled]="levelUp" (click)="restButton()"><span class="buttonLabel">> Rest <</span></button>
+            </div>
             <ng-container *ngIf="levelUp">
                 <div>
                     <input type="radio" id="chosenStat1" name="chosenStat" (click)="chosenStat(0)"/><label for='chosenStat1'>MOV</label>
@@ -113,7 +115,9 @@
                 </div>
             </ng-container>
             <ng-container *ngIf="(statToLevelUp >= 0 && statToLevelUp < 4) || rest">
-                <button class="confirmDiceButton" dataOnHover=">CONFIRM<" (click)="confirmChoiceOnEndLevel()"><span class="buttonLabel">> CONFIRM <</span></button>
+                <div>
+                    <button class="confirmDiceButton" dataOnHover=">CONFIRM<" (click)="confirmChoiceOnEndLevel()"><span class="buttonLabel">> CONFIRM <</span></button>
+                </div>
             </ng-container>
         </div>
     </ng-container>

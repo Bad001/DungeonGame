@@ -50,8 +50,12 @@ h2 {
 
 .levelUpOrRest {
     display: block;
-    margin: auto;
     text-align: center;
+}
+
+.levelUpOrRest-button-container {
+    display: flex;
+    justify-content: space-between;
 }
 
 .dungeon, .dungeon td {

@@ -34,7 +34,7 @@ a:hover .linkLabel, button:hover .buttonLabel {
     display: none;
 }
 
-a:hover:before, button:hover:before {
+a:hover:before, button:hover:enabled:before {
     background-color: white;
     color: black;
     content: attr(dataOnHover);
