@@ -283,7 +283,7 @@ class Game {
     levelUpOrRest() {
         return new Promise((resolve) => {
             this.socket.emit('levelUpOrRest', true);
-            this.socket.on('levelUpOrRest', (data) => {
+            this.socket.once('levelUpOrRest', (data) => {
                 console.log(data);
                 const levelUp = data[0];
                 const stat = data[1];
