@@ -7,7 +7,7 @@ const pathfinding = require('./astar');
 
 class Game {
     constructor(socket) {
-        // Variables / Object
+        // Variables / Objects
         this.player = null;
         this.enemies = [];
         this.currentLevelDungeon = [];
@@ -18,7 +18,6 @@ class Game {
         // Indexes
         this.currentLevelIndex = 0;
         // Flags
-        this.levelUp = false;
         this.isEnergyPhase = false;
         this.isFirstTurn = true;
         // Socket
@@ -266,12 +265,18 @@ class Game {
         console.log('Enemy attack phase of Player ' + this.socket.id);
         let lineOfSight;
         let attackResult;
+        let playerVisible = false;
+        let totalDamage = 0;
         for(let i = 0; i < this.enemies.length; i++) {
             lineOfSight = pathfinding.lineOfSight(this.currentLevelDungeon, this.enemies[i].getPosition, this.player.getPosition);
             if((this.enemies[i].getRange - lineOfSight['totalCost']) >= 0) {
-                attackResult = this.enemies[i].attack(this.player);
-                this.player = attackResult['target'];
+                playerVisible = true;
+                totalDamage += this.enemies[i].getDamage;
             }
+        }
+        if(playerVisible) {
+            attackResult = this.enemies[0].attack(this.player, totalDamage);
+            this.player = attackResult['target'];
         }
         this.player.setSpeed = this.originalSpeed;
         this.player.setDamage = this.originalDamage;

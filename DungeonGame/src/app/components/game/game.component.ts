@@ -1,11 +1,11 @@
-import { ChangeDetectionStrategy, Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
-import { RouterModule, RouterOutlet } from '@angular/router';
+import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { NgFor, NgIf } from '@angular/common';
 import { CharacterComponent } from "./character/character.component";
 import { ReplaceNumberWithDiceDirective } from '../../directives/replace-number-with-dice.directive';
 import { RenderGameMapDirective } from '../../directives/render-game-map.directive';
-import { FormsModule } from '@angular/forms';
 import { GameService } from '../../services/game.service';
+import { SnackbarService } from '../../services/snackbar.service';
 
 @Component({
     selector: 'app-game',
@@ -13,7 +13,7 @@ import { GameService } from '../../services/game.service';
     templateUrl: './game.component.html',
     styleUrl: './game.component.css',
     changeDetection: ChangeDetectionStrategy.Default,
-    imports: [RouterOutlet, NgFor, RouterModule, NgIf, CharacterComponent, ReplaceNumberWithDiceDirective, RenderGameMapDirective, FormsModule]
+    imports: [NgFor, RouterModule, NgIf, CharacterComponent, ReplaceNumberWithDiceDirective, RenderGameMapDirective ]
 })
 
 export class GameComponent implements OnDestroy {
@@ -42,7 +42,7 @@ export class GameComponent implements OnDestroy {
   // Game outcome and points
   gameOutcome: string = 'You Lose!';
 
-  constructor(private GameService: GameService) {
+  constructor(private GameService: GameService, private SnackbarService: SnackbarService) {
     this.GameService.setupSocketConnection();
     this.GameService.listenToServer('presets').subscribe((data) => {
       this.dungeon = data[0];
@@ -64,7 +64,7 @@ export class GameComponent implements OnDestroy {
     });
     this.GameService.listenToServer('playerPhase').subscribe((data) => {
       if(typeof data[0] === 'string') {
-        alert(data[0]);
+        this.SnackbarService.openSnackBar(data[0], 'Got it!');
       }
       else {
         this.dungeon = data[0];
