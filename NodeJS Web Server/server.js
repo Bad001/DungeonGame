@@ -32,7 +32,7 @@ app.get('/api/minions', (req, res) => {
 });
 app.get('/api/minions/:position', (req, res) => {
   const { position } = req.params;
-  if(res.json(minions[position]) === undefined) {
+  if(minions[position] === undefined) {
     res.send('<h1>Resource does not exists</h1>');
   }
   else {
