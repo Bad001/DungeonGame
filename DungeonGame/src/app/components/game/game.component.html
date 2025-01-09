@@ -17,9 +17,9 @@
         <div class="center">
             <div class="game-section center">
                 <app-character [character]="character" [isSelectionPhase]="!isCharacterBeenChosen"></app-character>
-                <ng-container *ngIf="isEnergyPhase">
+                <ng-container *ngIf="isEnergyPhase && canUseSpecialAbility">
                     <div>
-                        <button dataOnHover=">Use Ability<"><span class="buttonLabel">> Use Ability <</span></button>
+                        <button dataOnHover=">Use Ability<" (click)="useSpecialAbility()"><span class="buttonLabel">> Use Ability <</span></button>
                     </div>
                 </ng-container>
             </div>

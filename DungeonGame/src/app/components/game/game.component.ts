@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, OnDestroy } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { NgFor, NgIf } from '@angular/common';
 import { CharacterComponent } from "./character/character.component";
@@ -12,7 +12,6 @@ import { SnackbarService } from '../../services/snackbar.service';
     standalone: true,
     templateUrl: './game.component.html',
     styleUrl: './game.component.css',
-    changeDetection: ChangeDetectionStrategy.Default,
     imports: [NgFor, RouterModule, NgIf, CharacterComponent, ReplaceNumberWithDiceDirective, RenderGameMapDirective ]
 })
 
@@ -27,6 +26,7 @@ export class GameComponent implements OnDestroy {
   levelUpOrRest: boolean = false;
   levelUp: boolean = false;
   rest: boolean = false;
+  canUseSpecialAbility:boolean = true;
   // Client will send this data to Server  | Client --> Server
   assignedStats = [0,0,0];
   die: number = 0;
@@ -52,14 +52,27 @@ export class GameComponent implements OnDestroy {
       }
       this.enemyInfo = data[2];
       this.playerInfo = data[3];
+      this.canUseSpecialAbility = data[4];
     });
     this.GameService.listenToServer('energyPhase').subscribe((data) => {
-      this.isEnergyPhase = data[0];
-      if(!Array.isArray(data[1])) {
-        this.playerInfo = data[1];
+      if(typeof data[0] === 'boolean') {
+        this.isEnergyPhase = data[0];
+        if(!Array.isArray(data[1])) {
+          this.playerInfo = data[1];
+        }
+        else {
+          this.energyDice = data[1];
+        }
       }
       else {
-        this.energyDice = data[1];
+        if(typeof data[0] === 'string') {
+          this.SnackbarService.openSnackBar(data[0], 'Got it!');
+        }
+        else {
+          this.energyDice = data[0];
+          this.canUseSpecialAbility = data[1];
+          this.assignedStats = [0,0,0];
+        }
       }
     });
     this.GameService.listenToServer('playerPhase').subscribe((data) => {
@@ -93,6 +106,10 @@ export class GameComponent implements OnDestroy {
     this.character.name = choiceOfUser.name;
     this.character.description = choiceOfUser.description;
     this.GameService.emit('startGame', this.character.name);
+  }
+
+  useSpecialAbility() {
+    this.GameService.emit('useSpecialAbility', true);
   }
 
   assignDie(die: number) {

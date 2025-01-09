@@ -151,7 +151,8 @@ class Game {
                 break;
             default: console.log("Error at enterLevel function!");
         }
-        this.socket.emit('presets', this.currentLevelDungeon, this.currentLevelIndex, this.enemies[0], this.player);
+        this.player.setAbilityUsed = false;
+        this.socket.emit('presets', this.currentLevelDungeon, this.currentLevelIndex, this.enemies[0], this.player, true);
     }
 
     energyPhase() {
@@ -162,6 +163,53 @@ class Game {
             }
             this.isEnergyPhase = true;
             this.socket.emit('energyPhase', this.isEnergyPhase, this.energyDice);
+            this.socket.once('useSpecialAbility', (data) => {
+                let resultSpecialAbility = null;
+                if(typeof data[0] == "boolean") {
+                    switch(this.player.getClassName) {
+                        case 'Barbarian':
+                            resultSpecialAbility = this.player.useSpecialAbility();
+                            if(resultSpecialAbility !== false) {
+                                this.socket.emit('energyPhase', resultSpecialAbility, false);
+                            }
+                            break;
+                        case 'Cleric':
+                            resultSpecialAbility = this.player.useSpecialAbility(this.energyDice);
+                            if(resultSpecialAbility !== false) {
+                                this.socket.emit('energyPhase', resultSpecialAbility, false);
+                            }
+                            break;
+                        case 'Knight':
+                            // Need to modify the user interface for this 
+                            break;
+                        case 'Necromancer':
+                            // Need to modify the user interface for this
+                            break;
+                        case 'Paladin':
+                            // Need to modify the user interface for this
+                            break;
+                        case 'Ranger':
+                            // Need to modify the user interface for this
+                            break;
+                        case 'Rogue':
+                            resultSpecialAbility = this.player.useSpecialAbility(this.energyDice);
+                            if(resultSpecialAbility !== false) {
+                                this.socket.emit('energyPhase', resultSpecialAbility, false);
+                            }
+                            break;
+                        case 'Wizard':
+                            resultSpecialAbility = this.player.useSpecialAbility();
+                            if(resultSpecialAbility !== false) {
+                                this.socket.emit('energyPhase', resultSpecialAbility, false);
+                            }
+                            break;
+                        default: console.log('An error occured in EnergyPhase at useSpecialAbility channel');;
+                    }
+                    if(resultSpecialAbility === false) {
+                        this.socket.emit('energyPhase', 'You can\'t use your ability now!');
+                    }
+                }
+            });
             this.socket.once('assignedStats', (data) => {
                 this.assignedStats = data[0];
                 if(data[0].includes(0)) {
@@ -183,6 +231,7 @@ class Game {
 
     playerPhase() {
         return new Promise((resolve) => {
+            this.socket.removeAllListeners('useSpecialAbility');
             console.log('Player phase of Player ' + this.socket.id);
             this.socket.on('playerPhase', (data) => {
                 const endPhase = data[0];
@@ -281,7 +330,6 @@ class Game {
         this.player.setSpeed = this.originalSpeed;
         this.player.setDamage = this.originalDamage;
         this.player.setAc =  this.player.getAc - this.assignedStats[2];
-        this.assignedStats = [0,0,0];
         this.socket.emit('enemyPhase', this.currentLevelDungeon, this.player);
     }
     
@@ -329,7 +377,7 @@ class Game {
                 }
             }
             else {
-                resolve(this.currentLevelIndex === 12 ? 'You Win!' : 'You Lose!');
+                resolve(this.currentLevelIndex === 12 ? 'Player ' + this.socket.id + ' wins!' : 'Player ' + this.socket.id + ' lost the game!');
             }
         });
     }

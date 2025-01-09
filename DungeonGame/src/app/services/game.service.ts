@@ -14,7 +14,7 @@ export class GameService {
   private characters: { name: string, description: string }[] = [
     { "name": 'Barbarian', "description": 'Once per turn, you may choose to reroll all dice when on 1 Health' },
     { "name": 'Cleric', "description": 'If you roll the same number with all Energy dice, you can increase it by 2 (max.6)' },
-    { "name": 'Knight', "description": 'Once per Dungeon Level you may assign 2 Energy dice of the same value' },
+    { "name": 'Knight', "description": 'Once per Dungeon Level you may assign 2 Energy dice of the same skill' },
     { "name": 'Necromancer', "description": 'Once per Dungeon Level you may choose to lose 1 HP to inflict 1 Damage' },
     { "name": 'Paladin', "description": 'Once per Dungeon Level you may leave one Energy Dice in place from last turn' },
     { "name": 'Ranger', "description": 'Once per Dungeon Level you may assign a die to Range instead of Speed' },
