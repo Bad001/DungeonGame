@@ -27,12 +27,14 @@ export class GameComponent implements OnDestroy {
   levelUp: boolean = false;
   rest: boolean = false;
   canUseSpecialAbility:boolean = true;
+  rangerAbilityUsed:boolean = false;
   // Client will send this data to Server  | Client --> Server
   assignedStats = [0,0,0];
   die: number = 0;
   coordinates: number[] = [];
   playerAction: string = '';
   statToLevelUp: number = 4;
+  rangeModifier: number = 0;
   // Client will listen to retrieve this data from Server  | Client <-- Server
   energyDice: any[] = [];   // Random energyDice for energyDice Phase
   dungeon:any [] = [];      // Map of the current dungeon
@@ -62,6 +64,8 @@ export class GameComponent implements OnDestroy {
         }
         else {
           this.energyDice = data[1];
+          this.canUseSpecialAbility = data[2];
+          this.rangerAbilityUsed = data[3];
         }
       }
       else {
@@ -71,7 +75,6 @@ export class GameComponent implements OnDestroy {
         else {
           this.energyDice = data[0];
           this.canUseSpecialAbility = data[1];
-          this.assignedStats = [0,0,0];
         }
       }
     });
@@ -108,7 +111,12 @@ export class GameComponent implements OnDestroy {
     this.GameService.emit('startGame', this.character.name);
   }
 
+  countZeroes(): number {
+    return this.assignedStats.filter(value => value === 0).length;
+  }
+
   useSpecialAbility() {
+    this.assignedStats = [0,0,0];
     this.GameService.emit('useSpecialAbility', true);
   }
 
@@ -118,13 +126,25 @@ export class GameComponent implements OnDestroy {
   }
 
   radioChecked(radioValue: number) {
-    if(this.assignedStats[radioValue] != 0) {
-      this.energyDice.push(this.assignedStats[radioValue]);
+    if(radioValue === 3) {
+      if(this.rangeModifier != 0) {
+        this.energyDice.push(this.rangeModifier);
+      }
+      this.rangeModifier = this.die;
+      let index = this.energyDice.indexOf(this.die);
+      if (index > -1) {                               // check if selected die is present in energyDice array
+        this.energyDice.splice(index, 1);             // remove the selected die from energyDice array
+      }
     }
-    this.assignedStats[radioValue] = this.die;
-    let index = this.energyDice.indexOf(this.die);
-    if (index > -1) {                               // check if selected die is present in energyDice array
-      this.energyDice.splice(index, 1);             // remove the selected die from energyDice array
+    else {
+      if(this.assignedStats[radioValue] != 0) {
+        this.energyDice.push(this.assignedStats[radioValue]);
+      }
+      this.assignedStats[radioValue] = this.die;
+      let index = this.energyDice.indexOf(this.die);
+      if (index > -1) {
+        this.energyDice.splice(index, 1);
+      }
     }
     this.die = 0;
   }
@@ -134,7 +154,7 @@ export class GameComponent implements OnDestroy {
   }
 
   confirmStat() {
-    this.GameService.emit('assignedStats', this.assignedStats);
+    this.GameService.emit('assignedStats', this.assignedStats, this.rangeModifier);
   }
 
   // Player Phase functions
@@ -174,7 +194,10 @@ export class GameComponent implements OnDestroy {
     for(let i = 0; i < 3; i++) {
       this.assignedStats[i] = 0;
     }
+    this.rangeModifier = 0;
   }
+
+  // Level Up Or Rest Phase
 
   levelUpButton() {
     if(this.levelUp) {

@@ -174,16 +174,14 @@ class Ranger extends Character {            // Once per Dungeon Level you
     constructor(name) {                     // may assign a die to Range
         super(name);                        // instead of Speed
     }
-    useSpecialAbility(movementDice) {
-        let rangeDice = 0;
+    useSpecialAbility() {
         if(this.isAbilityUsed) {
             return false;
         }
         else {
             this.setAbilityUsed = true;
-            rangeDice = movementDice + this.range;
         }
-        return rangeDice;
+        return true;
     }
 }
 
@@ -192,6 +190,7 @@ class Barbarian extends Character {         // Once per turn, you may
         super(name);                        // on 1 Health
     }
     useSpecialAbility() {
+        let dice = [];
         if((this.getHp != 1) || this.isAbilityUsed) {
             return false;
         }

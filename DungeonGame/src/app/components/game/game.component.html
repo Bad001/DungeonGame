@@ -53,13 +53,14 @@
                             <td>{{assignedStats[0]+playerInfo.speed}}</td>
                             <td>{{assignedStats[1]+playerInfo.damage}}</td>
                             <td>{{assignedStats[2]+playerInfo.ac}}</td>
+                            <td>{{playerInfo.range + rangeModifier}}</td>
                         </ng-container>
                         <ng-template #confirmedStatsTemplate>
                             <td>{{playerInfo.speed}}</td>
                             <td>{{playerInfo.damage}}</td>
                             <td>{{playerInfo.ac}}</td>
+                            <td>{{playerInfo.range}}</td>
                         </ng-template>
-                        <td>{{playerInfo.range}}</td>
                     </tr>
                 </table>
             </div>
@@ -72,11 +73,16 @@
                         </div>
                         <ng-container *ngIf="isDieButtonPressed">
                             <div>
-                                <input type="radio" id="stat1" name="stats" (click)="radioChecked(0)"/><label for='stat1'>MOV</label>
+                                <ng-container *ngIf="!rangerAbilityUsed">
+                                    <input type="radio" id="stat1" name="stats" (click)="radioChecked(0)"/><label for='stat1'>MOV</label>
+                                </ng-container>
                                 <input type="radio" id="stat2" name="stats" (click)="radioChecked(1)"/><label for='stat2'>DMG</label>
                                 <input type="radio" id="stat3" name="stats" (click)="radioChecked(2)"/><label for='stat3'>DEF</label>
+                                <ng-container *ngIf="rangerAbilityUsed">
+                                    <input type="radio" id="stat4" name="stats" (click)="radioChecked(3)"/><label for='stat4'>RNG</label>
+                                </ng-container>
                             </div>
-                            <ng-container *ngIf="!assignedStats.includes(0)">
+                            <ng-container *ngIf="!assignedStats.includes(0) || (this.rangerAbilityUsed && countZeroes() === 1 && this.rangeModifier != 0)">
                                 <div>
                                     <button class="confirmDiceButton" dataOnHover=">CONFIRM<" (click)="confirmStat()"><span class="buttonLabel">> CONFIRM <</span></button>
                                 </div>
