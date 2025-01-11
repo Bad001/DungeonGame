@@ -174,12 +174,14 @@ class Game {
             if( (isFirstTurn && this.player.getClassName === 'Paladin') ||
                 ((this.player.getClassName === 'Barbarian') && (this.player.getHp != 1)) ||
                 ((this.player.getClassName === 'Cleric') && !(allEqualDice(this.energyDice))) ||
+                ((this.player.getClassName === 'Necromancer') && (this.player.getHp == 1)) ||
                 this.player.isAbilityUsed ) {
                 this.socket.emit('energyPhase', this.isEnergyPhase, this.energyDice, false);
             }
             else {
                 this.socket.emit('energyPhase', this.isEnergyPhase, this.energyDice, true);
             }
+            let flag = false;
             this.socket.once('useSpecialAbility', (data) => {
                 let resultSpecialAbility = null;
                 if(data[0] === true) {
@@ -199,13 +201,13 @@ class Game {
                             }
                             break;
                         case 'Knight':
-                            // Need to modify the user interface for this
+                            flag = true;
                             break;
                         case 'Necromancer':
-                            // Need to modify the user interface for this
+                            this.socket.emit('energyPhase', this.isEnergyPhase, this.energyDice, false, false, true);
                             break;
                         case 'Paladin':
-                            // Need to modify the user interface for this
+                            flag = true;
                             break;
                         case 'Ranger':
                             resultSpecialAbility = this.player.useSpecialAbility(this.energyDice);
@@ -232,10 +234,22 @@ class Game {
                     }
                 }
             });
-            this.socket.once('assignedStats', (data) => {
+            this.socket.on('assignedStats', (data) => {
                 this.assignedStats = data[0];
                 const countZeroes = data[0].filter(value => value === 0).length;
-                if(countZeroes >= 2) {
+                if(data[0].length == 2) {
+                    const enemyCoordinates = data[0];
+                    if((this.player.getClassName === 'Necromancer') && !this.player.isAbilityUsed) {
+                        this.currentLevelDungeon[enemyCoordinates[0]][enemyCoordinates[1]] = this.player.useSpecialAbility(this.currentLevelDungeon[enemyCoordinates[0]][enemyCoordinates[1]]);
+                        if(this.currentLevelDungeon[enemyCoordinates[0]][enemyCoordinates[1]].getHp <= 0) {
+                            const index = this.enemies.indexOf(this.currentLevelDungeon[enemyCoordinates[0]][enemyCoordinates[1]]);
+                            this.enemies.splice(index, 1);
+                            this.currentLevelDungeon[enemyCoordinates[0]][enemyCoordinates[1]] = 0;
+                        }
+                        this.socket.emit('playerPhase', this.currentLevelDungeon, this.player);
+                    }
+                }
+                else if(countZeroes >= 2) {
                     reject('An error occured at Energy Phase!');
                 }
                 else {
@@ -257,6 +271,7 @@ class Game {
     playerPhase() {
         return new Promise((resolve) => {
             this.socket.removeAllListeners('useSpecialAbility');
+            this.socket.removeAllListeners('assignedStats');
             console.log('Player phase of Player ' + this.socket.id);
             this.socket.on('playerPhase', (data) => {
                 const endPhase = data[0];

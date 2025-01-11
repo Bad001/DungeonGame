@@ -67,7 +67,14 @@
             <div class="game-section center">
                 <a class="linkLabel giveUp" dataOnHover=">Give Up<" (click)="giveUp()"><span class="linkLabel">> Give Up <</span></a>
                 <ng-container *ngIf="isEnergyPhase">
-                    <h2>Energy Phase</h2>
+                    <ng-container *ngIf="necromancerAbilityUsed; else paladinTemplate">
+                        <h2>Choose a Monster</h2>
+                        <p class="hint">Click a cell of map to select a monster</p>
+                        <h2 *ngIf="coordinates.length != 0">{{coordinates[0]+1}},{{coordinates[1]+1}}</h2>
+                        <button *ngIf="coordinates.length != 0" dataOnHover=">Confirm<" (click)="confirmStat()"><span class="buttonLabel">> Confirm <</span></button>
+                    </ng-container>
+                    <ng-template #paladinTemplate>
+                        <h2>Energy Phase</h2>
                         <div class="energyDiceResults">
                             <button class="energyDie" *ngFor="let die of energyDice" appReplaceNumberWithDice (click)="assignDie(die)">{{die}}</button>
                         </div>
@@ -88,6 +95,7 @@
                                 </div>
                             </ng-container>
                         </ng-container>
+                    </ng-template>
                 </ng-container>
                 <ng-container *ngIf="!isEnergyPhase">
                     <h2>Actions</h2>

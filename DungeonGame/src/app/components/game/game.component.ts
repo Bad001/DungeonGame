@@ -28,6 +28,9 @@ export class GameComponent implements OnDestroy {
   rest: boolean = false;
   canUseSpecialAbility:boolean = true;
   rangerAbilityUsed:boolean = false;
+  necromancerAbilityUsed:boolean = true;
+  paladinAbilityUsed:boolean = false;
+  knightAbilityUsed:boolean = false;
   // Client will send this data to Server  | Client --> Server
   assignedStats = [0,0,0];
   die: number = 0;
@@ -66,6 +69,7 @@ export class GameComponent implements OnDestroy {
           this.energyDice = data[1];
           this.canUseSpecialAbility = data[2];
           this.rangerAbilityUsed = data[3];
+          this.necromancerAbilityUsed = data[4];
         }
       }
       else {
@@ -154,13 +158,20 @@ export class GameComponent implements OnDestroy {
   }
 
   confirmStat() {
-    this.GameService.emit('assignedStats', this.assignedStats, this.rangeModifier);
+    if(this.necromancerAbilityUsed) {
+      this.GameService.emit('assignedStats', this.coordinates);
+      this.coordinates = [];
+      this.necromancerAbilityUsed = false;
+    }
+    else {
+      this.GameService.emit('assignedStats', this.assignedStats, this.rangeModifier);
+    }
   }
 
   // Player Phase functions
   
   setCoordinates(coordinates: [number, number]) {
-    if(!this.isEnergyPhase) {
+    if(!this.isEnergyPhase || this.necromancerAbilityUsed) {
       this.coordinates = coordinates;
     }
   }
