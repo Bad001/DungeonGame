@@ -200,14 +200,19 @@ class Game {
                             }
                             break;
                         case 'Knight':
+                            
                             break;
                         case 'Necromancer':
                             this.socket.emit('energyPhase', this.isEnergyPhase, this.energyDice, false, true);
                             break;
                         case 'Paladin':
+                            resultSpecialAbility = this.player.useSpecialAbility();
+                            if(resultSpecialAbility !== false) {
+                                this.socket.emit('energyPhase', this.isEnergyPhase, this.assignedStats, false, true);
+                            }
                             break;
                         case 'Ranger':
-                            resultSpecialAbility = this.player.useSpecialAbility(this.energyDice);
+                            resultSpecialAbility = this.player.useSpecialAbility();
                             if(resultSpecialAbility !== false) {
                                 this.socket.emit('energyPhase', this.isEnergyPhase, this.energyDice, false, true);
                             }
@@ -265,7 +270,7 @@ class Game {
                     this.player.setSpeed = this.assignedStats[0] + this.player.getSpeed;
                     this.player.setDamage = this.assignedStats[1] + this.player.getDamage;
                     this.player.setAc = this.assignedStats[2] + this.player.getAc;
-                    this.player.setRange = this.player.getRange + data[1];
+                    this.player.setRange = this.player.getRange + data[1];  // From Ranger Special Ability
                     this.socket.emit('energyPhase', this.isEnergyPhase, this.player);
                     resolve(console.log(this.assignedStats + ' assigned stats of Player ' + this.socket.id));
                 }

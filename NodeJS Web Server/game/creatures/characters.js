@@ -131,23 +131,14 @@ class Paladin extends Character {           // Once per Dungeon Level you
     constructor(name) {                     // may leave one Energy Dice in
         super(name);                        // place from last turn
     }
-    useSpecialAbility(oldAssignedStats, energyDice, stat) {
+    useSpecialAbility() {
         if(this.isAbilityUsed) {
             return false;
         }
         else {
             this.setAbilityUsed = true;
-            switch(stat) {
-                case 'mov': energyDice[0] = oldAssignedStats[0];
-                    break;
-                case 'dmg': energyDice[1] = oldAssignedStats[1];
-                    break;
-                case 'def': energyDice[2] = oldAssignedStats[2];
-                    break;
-                default: console.log("An Error occured on special ability of Paladin method");
-            }
         }
-        return energyDice;
+        return true;
     }
 }
 

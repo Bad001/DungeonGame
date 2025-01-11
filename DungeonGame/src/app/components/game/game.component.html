@@ -70,31 +70,59 @@
                     <ng-container *ngIf="necromancerAbilityUsed; else paladinTemplate">
                         <h2>Choose a Monster</h2>
                         <p class="hint">Click a cell of map to select a monster</p>
-                        <h2 *ngIf="coordinates.length != 0">{{coordinates[0]+1}},{{coordinates[1]+1}}</h2>
-                        <button *ngIf="coordinates.length != 0" dataOnHover=">Confirm<" (click)="confirmStat()"><span class="buttonLabel">> Confirm <</span></button>
+                        <div *ngIf="coordinates.length != 0">
+                            <h2>{{coordinates[0]+1}},{{coordinates[1]+1}}</h2>
+                            <button dataOnHover=">Confirm<" (click)="confirmStat()"><span class="buttonLabel">> Confirm <</span></button>
+                        </div>
                     </ng-container>
                     <ng-template #paladinTemplate>
-                        <h2>Energy Phase</h2>
-                        <div class="energyDiceResults">
-                            <button class="energyDie" *ngFor="let die of energyDice" appReplaceNumberWithDice (click)="assignDie(die)">{{die}}</button>
-                        </div>
-                        <ng-container *ngIf="isDieButtonPressed">
-                            <div>
-                                <ng-container *ngIf="!rangerAbilityUsed">
-                                    <input type="radio" id="stat1" name="stats" (click)="radioChecked(0)"/><label for='stat1'>MOV</label>
-                                </ng-container>
-                                <input type="radio" id="stat2" name="stats" (click)="radioChecked(1)"/><label for='stat2'>DMG</label>
-                                <input type="radio" id="stat3" name="stats" (click)="radioChecked(2)"/><label for='stat3'>DEF</label>
-                                <ng-container *ngIf="rangerAbilityUsed">
-                                    <input type="radio" id="stat4" name="stats" (click)="radioChecked(3)"/><label for='stat4'>RNG</label>
-                                </ng-container>
+                        <ng-container *ngIf="paladinAbilityUsed; else knightTemplate">
+                            <h2>Previous Stats</h2>
+                            <p class="hint">Choose what die to leave in place from last turn</p>
+                            <div class="energyDiceResults">
+                                <button [disabled]="true" class="energyDie" *ngFor="let die of lastTurnAssignedStats" appReplaceNumberWithDice>{{die}}</button>
                             </div>
-                            <ng-container *ngIf="!assignedStats.includes(0) || (this.rangerAbilityUsed && countZeroes() === 1 && this.rangeModifier != 0)">
+                            <input type="radio" id="stat1" name="stats" (click)="placePreviousStatDie('mov')"/><label for='stat1'>MOV</label>
+                            <input type="radio" id="stat2" name="stats" (click)="placePreviousStatDie('dmg')"/><label for='stat2'>DMG</label>
+                            <input type="radio" id="stat3" name="stats" (click)="placePreviousStatDie('def')"/><label for='stat3'>DEF</label>
+                            <ng-container *ngIf="this.stat != '' ">
                                 <div>
-                                    <button class="confirmDiceButton" dataOnHover=">CONFIRM<" (click)="confirmStat()"><span class="buttonLabel">> CONFIRM <</span></button>
+                                    <button class="confirmDiceButton" dataOnHover=">CONFIRM<" (click)="confirmPreviousStat()"><span class="buttonLabel">> CONFIRM <</span></button>
                                 </div>
                             </ng-container>
                         </ng-container>
+                        <ng-template #knightTemplate>
+                            <ng-container *ngIf="knightAbilityUsed; else energyPhaseTemplate">
+                                
+                            </ng-container>
+                            <ng-template #energyPhaseTemplate>
+                                <h2>Energy Phase</h2>
+                                <div class="energyDiceResults">
+                                    <button class="energyDie" *ngFor="let die of energyDice" appReplaceNumberWithDice (click)="assignDie(die)">{{die}}</button>
+                                </div>
+                                <ng-container *ngIf="isDieButtonPressed">
+                                    <div>
+                                        <ng-container *ngIf="!rangerAbilityUsed && this.stat !== 'mov'">
+                                            <input type="radio" id="stat1" name="stats" (click)="radioChecked(0)"/><label for='stat1'>MOV</label>
+                                        </ng-container>
+                                        <ng-container *ngIf="this.stat !== 'dmg'">
+                                            <input type="radio" id="stat2" name="stats" (click)="radioChecked(1)"/><label for='stat2'>DMG</label>
+                                        </ng-container>
+                                        <ng-container *ngIf="this.stat !== 'def'">
+                                            <input type="radio" id="stat3" name="stats" (click)="radioChecked(2)"/><label for='stat3'>DEF</label>
+                                        </ng-container>
+                                        <ng-container *ngIf="rangerAbilityUsed">
+                                            <input type="radio" id="stat4" name="stats" (click)="radioChecked(3)"/><label for='stat4'>RNG</label>
+                                        </ng-container>
+                                    </div>
+                                    <ng-container *ngIf="!assignedStats.includes(0) || (this.rangerAbilityUsed && countZeroes() === 1 && this.rangeModifier != 0)">
+                                        <div>
+                                            <button class="confirmDiceButton" dataOnHover=">CONFIRM<" (click)="confirmStat()"><span class="buttonLabel">> CONFIRM <</span></button>
+                                        </div>
+                                    </ng-container>
+                                </ng-container>
+                            </ng-template>
+                        </ng-template>
                     </ng-template>
                 </ng-container>
                 <ng-container *ngIf="!isEnergyPhase">

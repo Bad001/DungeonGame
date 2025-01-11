@@ -36,9 +36,11 @@ export class GameComponent implements OnDestroy {
   die: number = 0;
   coordinates: number[] = [];
   playerAction: string = '';
+  stat: string = '';
   statToLevelUp: number = 4;
   rangeModifier: number = 0;
   // Client will listen to retrieve this data from Server  | Client <-- Server
+  lastTurnAssignedStats = [0,0,0];
   energyDice: any[] = [];   // Random energyDice for energyDice Phase
   dungeon:any [] = [];      // Map of the current dungeon
   dungeonLevel: number = 0; // Current Dungeon Level Index
@@ -66,15 +68,16 @@ export class GameComponent implements OnDestroy {
           this.playerInfo = data[1];
         }
         else {
-          this.energyDice = data[1];
           this.canUseSpecialAbility = data[2];
           if(this.character.name === 'Ranger') {
+            this.energyDice = data[1];
             this.rangerAbilityUsed = data[3];
             this.necromancerAbilityUsed = false;
             this.paladinAbilityUsed = false;
             this.knightAbilityUsed = false;
           }
           else if (this.character.name === 'Necromancer') {
+            this.energyDice = data[1];
             this.necromancerAbilityUsed = data[3];
             this.paladinAbilityUsed = false;
             this.knightAbilityUsed = false;
@@ -82,11 +85,18 @@ export class GameComponent implements OnDestroy {
           }
           else if(this.character.name === 'Paladin') {
             this.paladinAbilityUsed = data[3];
+            if(this.paladinAbilityUsed) {
+              this.lastTurnAssignedStats = data[1];  
+            }
+            else {
+              this.energyDice = data[1];
+            }
             this.knightAbilityUsed = false;
             this.rangerAbilityUsed = false;
             this.necromancerAbilityUsed = false;
           }
           else {
+            this.energyDice = data[1];
             this.knightAbilityUsed = data[3];
             this.rangerAbilityUsed = false;
             this.necromancerAbilityUsed = false;
@@ -176,11 +186,16 @@ export class GameComponent implements OnDestroy {
     this.die = 0;
   }
 
+  placePreviousStatDie(radioValue: string) {
+    this.stat = radioValue;
+  }
+
   chosenStat(radioValue: number) {
     this.statToLevelUp = radioValue;
   }
 
   confirmStat() {
+    this.stat = '';
     if(this.necromancerAbilityUsed) {
       this.GameService.emit('assignedStats', this.coordinates);
       this.coordinates = [];
@@ -189,6 +204,26 @@ export class GameComponent implements OnDestroy {
     else {
       this.GameService.emit('assignedStats', this.assignedStats, this.rangeModifier);
     }
+  }
+
+  confirmPreviousStat() {
+    switch(this.stat) {
+      case 'mov':
+        this.assignedStats[0] = this.lastTurnAssignedStats[0];
+        this.energyDice.shift();
+        break;
+      case 'dmg':
+        this.assignedStats[1] = this.lastTurnAssignedStats[1];
+        this.energyDice.splice(1, 1);
+        break;
+      case 'def':
+        this.assignedStats[2] = this.lastTurnAssignedStats[2];
+        this.energyDice.pop();
+        break;
+      default: console.log('Chosen stat not valid in confirmPreviousStat function!');;
+    }
+    this.lastTurnAssignedStats = [0,0,0];
+    this.paladinAbilityUsed = false;
   }
 
   // Player Phase functions
