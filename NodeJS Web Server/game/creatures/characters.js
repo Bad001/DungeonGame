@@ -276,7 +276,7 @@ class Necromancer extends Character {
         super(name);                       // you may choose to lose 
     }                                      // 1 HP to inflict 1 Damage
     useSpecialAbility(enemy) {
-        if(this.isAbilityUsed) {
+        if(this.isAbilityUsed || typeof enemy === 'number' || enemy.getClassName != 'Enemy') {
             return false;
         }
         else {

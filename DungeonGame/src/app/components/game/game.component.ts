@@ -68,13 +68,36 @@ export class GameComponent implements OnDestroy {
         else {
           this.energyDice = data[1];
           this.canUseSpecialAbility = data[2];
-          this.rangerAbilityUsed = data[3];
-          this.necromancerAbilityUsed = data[4];
+          if(this.character.name === 'Ranger') {
+            this.rangerAbilityUsed = data[3];
+            this.necromancerAbilityUsed = false;
+            this.paladinAbilityUsed = false;
+            this.knightAbilityUsed = false;
+          }
+          else if (this.character.name === 'Necromancer') {
+            this.necromancerAbilityUsed = data[3];
+            this.paladinAbilityUsed = false;
+            this.knightAbilityUsed = false;
+            this.rangerAbilityUsed = false;
+          }
+          else if(this.character.name === 'Paladin') {
+            this.paladinAbilityUsed = data[3];
+            this.knightAbilityUsed = false;
+            this.rangerAbilityUsed = false;
+            this.necromancerAbilityUsed = false;
+          }
+          else {
+            this.knightAbilityUsed = data[3];
+            this.rangerAbilityUsed = false;
+            this.necromancerAbilityUsed = false;
+            this.paladinAbilityUsed = false;
+          }
         }
       }
       else {
         if(typeof data[0] === 'string') {
           this.SnackbarService.openSnackBar(data[0], 'Got it!');
+          this.canUseSpecialAbility = data[1];
         }
         else {
           this.energyDice = data[0];

@@ -181,9 +181,8 @@ class Game {
             else {
                 this.socket.emit('energyPhase', this.isEnergyPhase, this.energyDice, true);
             }
-            let flag = false;
-            this.socket.once('useSpecialAbility', (data) => {
-                let resultSpecialAbility = null;
+            let resultSpecialAbility = null;
+            this.socket.on('useSpecialAbility', (data) => {
                 if(data[0] === true) {
                     switch(this.player.getClassName) {
                         case 'Barbarian':
@@ -201,13 +200,11 @@ class Game {
                             }
                             break;
                         case 'Knight':
-                            flag = true;
                             break;
                         case 'Necromancer':
-                            this.socket.emit('energyPhase', this.isEnergyPhase, this.energyDice, false, false, true);
+                            this.socket.emit('energyPhase', this.isEnergyPhase, this.energyDice, false, true);
                             break;
                         case 'Paladin':
-                            flag = true;
                             break;
                         case 'Ranger':
                             resultSpecialAbility = this.player.useSpecialAbility(this.energyDice);
@@ -240,13 +237,21 @@ class Game {
                 if(data[0].length == 2) {
                     const enemyCoordinates = data[0];
                     if((this.player.getClassName === 'Necromancer') && !this.player.isAbilityUsed) {
-                        this.currentLevelDungeon[enemyCoordinates[0]][enemyCoordinates[1]] = this.player.useSpecialAbility(this.currentLevelDungeon[enemyCoordinates[0]][enemyCoordinates[1]]);
-                        if(this.currentLevelDungeon[enemyCoordinates[0]][enemyCoordinates[1]].getHp <= 0) {
-                            const index = this.enemies.indexOf(this.currentLevelDungeon[enemyCoordinates[0]][enemyCoordinates[1]]);
-                            this.enemies.splice(index, 1);
-                            this.currentLevelDungeon[enemyCoordinates[0]][enemyCoordinates[1]] = 0;
+                        resultSpecialAbility = this.player.useSpecialAbility(this.currentLevelDungeon[enemyCoordinates[0]][enemyCoordinates[1]]);
+                        if(resultSpecialAbility !== false) {
+                            this.currentLevelDungeon[enemyCoordinates[0]][enemyCoordinates[1]] = resultSpecialAbility;
+                            if(this.currentLevelDungeon[enemyCoordinates[0]][enemyCoordinates[1]].getHp <= 0) {
+                                const index = this.enemies.indexOf(this.currentLevelDungeon[enemyCoordinates[0]][enemyCoordinates[1]]);
+                                this.enemies.splice(index, 1);
+                                this.currentLevelDungeon[enemyCoordinates[0]][enemyCoordinates[1]] = 0;
+                            }
+                            this.socket.emit('playerPhase', this.currentLevelDungeon, this.player);
                         }
-                        this.socket.emit('playerPhase', this.currentLevelDungeon, this.player);
+                        else {
+                            this.socket.emit('energyPhase', 'Target Not Valid!', true);
+                            this.player.setAbilityUsed = false;
+                            resultSpecialAbility = null;
+                        }
                     }
                 }
                 else if(countZeroes >= 2) {
