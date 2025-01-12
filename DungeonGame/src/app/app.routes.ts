@@ -10,7 +10,7 @@ export const routes: Routes = [
     {path: '', component: HomeComponent},
     {path: 'game', component: GameComponent},
     {path: 'ranking', component: RankingComponent},
-    {path: 'login', component: LoginComponent},
+    {path: 'signin', component: LoginComponent},
     {path: 'signup', component: SignupComponent},
     {path: '**', component: PageNotFoundComponent}
 ];
