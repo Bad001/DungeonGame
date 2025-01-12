@@ -219,14 +219,8 @@ class Knight extends Character {            // Once per Dungeon Level
     constructor(name) {                     // you may assign 2 Energy
         super(name);                        // dice of the same skill
     }
-    useSpecialAbility(energyDice, assignedStats) {      // This function is a little bit different from the others because checks
-        let totalValueEnergyDice = 0;                   // if assignedStats array is not compromise
-        let totalValueAssignedStats = 0;
-        for(let i = 0; i < 3; i++) {
-            totalValueEnergyDice += energyDice[i];
-            totalValueAssignedStats += assignedStats[i];
-        }
-        if(this.isAbilityUsed && (totalValueAssignedStats !== totalValueEnergyDice)) {
+    useSpecialAbility() {
+        if(this.isAbilityUsed) {
             return false;
         }
         else {

@@ -168,20 +168,44 @@ export class GameComponent implements OnDestroy {
         this.energyDice.push(this.rangeModifier);
       }
       this.rangeModifier = this.die;
-      let index = this.energyDice.indexOf(this.die);
-      if (index > -1) {                               // check if selected die is present in energyDice array
-        this.energyDice.splice(index, 1);             // remove the selected die from energyDice array
-      }
     }
     else {
       if(this.assignedStats[radioValue] != 0) {
         this.energyDice.push(this.assignedStats[radioValue]);
       }
       this.assignedStats[radioValue] = this.die;
-      let index = this.energyDice.indexOf(this.die);
-      if (index > -1) {
-        this.energyDice.splice(index, 1);
+    }
+    let index = this.energyDice.indexOf(this.die);
+    if (index > -1) {                               // check if selected die is present in energyDice array
+      this.energyDice.splice(index, 1);             // remove the selected die from energyDice array
+    }
+    this.die = 0;
+  }
+
+  knightAbility(radioValue: number) {
+    if(this.assignedStats[radioValue] != 0) {
+      this.assignedStats[radioValue] += this.die;
+      if(this.energyDice.length > 0) {
+        switch(radioValue) {
+          case 0:
+            this.stat = 'mov';
+            break;
+          case 1:
+            this.stat = 'dmg';
+            break;
+          case 2:
+            this.stat = 'def';
+            break;
+          default: console.log('radioValue not valid on knightAbility function!');
+        }
       }
+    }
+    else {
+      this.assignedStats[radioValue] = this.die;
+    }
+    let index = this.energyDice.indexOf(this.die);
+    if (index > -1) {
+      this.energyDice.splice(index, 1);
     }
     this.die = 0;
   }
@@ -200,6 +224,10 @@ export class GameComponent implements OnDestroy {
       this.GameService.emit('assignedStats', this.coordinates);
       this.coordinates = [];
       this.necromancerAbilityUsed = false;
+    }
+    else if(this.knightAbilityUsed) {
+      this.GameService.emit('assignedStats', this.assignedStats);
+      this.knightAbilityUsed = false;
     }
     else {
       this.GameService.emit('assignedStats', this.assignedStats, this.rangeModifier);
@@ -220,7 +248,7 @@ export class GameComponent implements OnDestroy {
         this.assignedStats[2] = this.lastTurnAssignedStats[2];
         this.energyDice.pop();
         break;
-      default: console.log('Chosen stat not valid in confirmPreviousStat function!');;
+      default: console.log('Chosen stat not valid in confirmPreviousStat function!');
     }
     this.lastTurnAssignedStats = [0,0,0];
     this.paladinAbilityUsed = false;

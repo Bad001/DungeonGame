@@ -200,7 +200,10 @@ class Game {
                             }
                             break;
                         case 'Knight':
-                            
+                            resultSpecialAbility = this.player.useSpecialAbility();
+                            if(resultSpecialAbility !== false) {
+                                this.socket.emit('energyPhase', this.isEnergyPhase, this.energyDice, false, true);
+                            }
                             break;
                         case 'Necromancer':
                             this.socket.emit('energyPhase', this.isEnergyPhase, this.energyDice, false, true);

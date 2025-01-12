@@ -93,7 +93,25 @@
                         </ng-container>
                         <ng-template #knightTemplate>
                             <ng-container *ngIf="knightAbilityUsed; else energyPhaseTemplate">
-                                
+                                <h2>Energy Phase</h2>
+                                <p class="hint" style="color:red;font-weight: bold;">Warning!! Knight ability is active!</p>
+                                <div class="energyDiceResults">
+                                    <button class="energyDie" *ngFor="let die of energyDice" appReplaceNumberWithDice (click)="assignDie(die)">{{die}}</button>
+                                </div>
+                                <ng-container *ngIf="this.stat !== 'mov'">
+                                    <input type="radio" id="stat1" name="stats" (click)="knightAbility(0)"/><label for='stat1'>MOV</label>
+                                </ng-container>
+                                <ng-container *ngIf="this.stat !== 'dmg'">
+                                    <input type="radio" id="stat2" name="stats" (click)="knightAbility(1)"/><label for='stat2'>DMG</label>
+                                </ng-container>
+                                <ng-container *ngIf="this.stat !== 'def'">
+                                    <input type="radio" id="stat3" name="stats" (click)="knightAbility(2)"/><label for='stat3'>DEF</label>
+                                </ng-container>
+                                <ng-container *ngIf="countZeroes() <= 1 && this.energyDice.length === 0">
+                                    <div>
+                                        <button class="confirmDiceButton" dataOnHover=">CONFIRM<" (click)="confirmStat()"><span class="buttonLabel">> CONFIRM <</span></button>
+                                    </div>
+                                </ng-container>
                             </ng-container>
                             <ng-template #energyPhaseTemplate>
                                 <h2>Energy Phase</h2>
