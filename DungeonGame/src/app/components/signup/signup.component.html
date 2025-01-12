@@ -1,2 +1,37 @@
-<p>signup works!</p>
+<div class="sign-container">
+    <div class="sign-box">
+      <h2>Sign up</h2>
+      <form (ngSubmit)="onSubmit()">
+        <div class="input-group">
+            <label for="email">E-mail</label>
+            <input type="email" id="email" name="email" [(ngModel)]="email" required placeholder="Enter your email"/>
+        </div>
+        <div class="input-group">
+            <label for="nickname">Nickname</label>
+            <input type="text" id="nickname" name="nickname" [(ngModel)]="nickname" required placeholder="Enter your Nickname"/>
+        </div>
+        <div class="input-group">
+            <label for="password">Password</label>
+            <div class="password-wrapper">
+                <input [type]="showPassword ? 'text' : 'password'" (input)="onPasswordChange()" id="password" name="password" [(ngModel)]="password" required placeholder="Create a Password"/>
+                <span class="toggle-password" (click)="togglePasswordVisibility()">
+                    <i class="material-icons">{{ showPassword ? 'visibility_off' : 'visibility' }}</i>
+                </span>
+            </div>
+        </div>
+        <div *ngIf="password != ''" class="input-group">
+            <label for="confirm-password">Confirm Password</label>
+            <div class="password-wrapper">
+                <input [type]="showPassword ? 'text' : 'password'" id="confirm-password" name="confirm-password" [(ngModel)]="confirmPassword" required placeholder="Confirm Password"/>
+                <span class="toggle-password" (click)="togglePasswordVisibility()">
+                    <i class="material-icons">{{ showPassword ? 'visibility_off' : 'visibility' }}</i>
+                </span>
+            </div>
+        </div>
+        <button type="submit">Sign up</button>
+        <p class="advise">Already have an account?</p>
+        <button class="signinButton" routerLink="/signin">Sign in</button>
+      </form>
+    </div>
+</div>
 <router-outlet></router-outlet>

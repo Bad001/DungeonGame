@@ -1,0 +1,36 @@
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+  
+button {
+    width: 100%;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    font-size: 18px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    margin-top: 15px;
+}
+  
+button:disabled {
+    background-color: #ddd;
+}
+  
+button:hover {
+    background-color: #45a049;
+}
+  
+.signinButton {
+    margin-top: 0;
+    background-color: chocolate;
+    padding: none;
+}
+  
+.signinButton:hover {
+    background-color: rgb(161, 84, 28);
+}
+  

@@ -1,74 +1,9 @@
-.login-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 80vh;
-  }
-  
-  .login-box {
-    background-color: rgba(128, 128, 128, 0.8);
-    padding: 30px;
-    border-radius: 8px;
-    width: 100%;
-    max-width: 400px;
-    color: white;
-    justify-content: center;
-    align-items: center;
-  }
-  
-  h2 {
+h2 {
     text-align: center;
     margin-bottom: 20px;
-  }
+}
   
-  .input-group {
-    text-align: center;
-    margin-bottom: 15px;
-    position: relative; /* For relative positioning of the password toggle */
-  }
-  
-  .input-group label {
-    display: block;
-    font-weight: 600;
-    font-size: 18px;
-    margin-bottom: 5px;
-  }
-  
-  .input-group input {
-    width: 70%; /* Ensure all input fields are the same width */
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 18px;
-    box-sizing: border-box; /* Ensure padding and borders are included in the width calculation */
-  }
-  
-  .password-wrapper {
-    position: relative;
-    width: 70%; /* Match the email field width */
-    display: inline-block; /* Keeps the input in line with the parent container */
-  }
-  
-  .password-wrapper input {
-    width: 100%; /* Ensure input takes up the full width */
-    padding-right: 35px; /* Leave space for the toggle icon */
-    box-sizing: border-box; /* Ensures padding is included in width calculation */
-  }
-  
-  .toggle-password {
-    position: absolute;
-    right: 10px; /* Align icon inside the input field */
-    top: 50%;
-    transform: translateY(-50%); /* Vertically center the icon */
-    cursor: pointer;
-    color: #999;
-  }
-  
-  .toggle-password:hover {
-    color: #333;
-  }
-  
-  button {
+button {
     width: 100%;
     padding: 10px;
     background-color: #4CAF50;
@@ -79,28 +14,23 @@
     cursor: pointer;
     text-align: center;
     margin-top: 15px;
-  }
+}
   
-  button:disabled {
+button:disabled {
     background-color: #ddd;
-  }
+}
   
-  button:hover {
+button:hover {
     background-color: #45a049;
-  }
+}
   
-  .signupButton {
+.signupButton {
     margin-top: 0;
     background-color: chocolate;
     padding: none;
-  }
+}
   
-  .signupButton:hover {
+.signupButton:hover {
     background-color: rgb(161, 84, 28);
-  }
-  
-  .advise {
-    color: white;
-    text-align: center;
-  }
+}
   
