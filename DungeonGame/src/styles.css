@@ -109,3 +109,10 @@ a:hover:before, button:hover:enabled:before {
     color: white;
     text-align: center;
 }
+
+.returnHomeLink {
+    margin: auto;
+    font-size: 2rem;
+    text-align: center;
+    padding-bottom: 5%;
+}
