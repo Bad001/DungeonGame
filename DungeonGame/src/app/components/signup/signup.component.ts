@@ -1,12 +1,16 @@
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { NgIf } from '@angular/common';
+import { AuthService } from '../../services/auth.service';
+import { SnackbarService } from '../../services/snackbar.service';
+import { HttpClientModule } from '@angular/common/http';
 
 @Component({
   selector: 'app-signup',
   standalone: true,
-  imports: [RouterModule, FormsModule, NgIf],
+  imports: [RouterModule, FormsModule, NgIf, HttpClientModule],
+  providers: [AuthService, SnackbarService],
   templateUrl: './signup.component.html',
   styleUrl: './signup.component.css'
 })
@@ -17,6 +21,8 @@ export class SignupComponent {
   confirmPassword: string = '';
   showPassword: boolean = false;
 
+  constructor(private authService: AuthService, private router: Router, private snackbar: SnackbarService) {}
+  
   onPasswordChange() {
     if (this.password === '') {
       this.confirmPassword = ''; // Clear confirmPassword when password is empty
@@ -34,8 +40,14 @@ export class SignupComponent {
       alert('Passwords do not match!');
       return;
     }
-    console.log('Email:', this.email);
-    console.log('Password:', this.password);
-    // Authentication logic here
+    this.authService.signup(this.email, this.nickname, this.password).subscribe({
+      next: (message) => {
+        this.snackbar.openSnackBar(message, 'Ok');
+        this.router.navigate(['/signin']);
+      },
+      error: (error) => {
+        this.snackbar.openSnackBar(error.error);
+      }
+    });
   }
 }

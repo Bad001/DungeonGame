@@ -85,6 +85,15 @@ class Character {                      // Character is a Superclass
         enemy.reduceHp = damage;
         return {target: enemy, damageInflicted: damage};
     }
+    useSpecialAbility() {
+        if(this.isAbilityUsed) {
+            return false;
+        }
+        else {
+            this.setAbilityUsed = true;
+        }
+        return true;
+    }
     levelUp(stat) {
         switch(stat) {
             case 0: this.speed++;
@@ -123,22 +132,14 @@ class Enemy extends Character {            // Each Enemy has different stats fro
         player.reduceHp = damage;
         return {target: player, damageInflicted: damage};
     }
-    levelUp() {}    // Overriding those two methods because enemies doesn't level up or rest
+    useSpecialAbility() {} // Overriding those three methods because enemies don't level up, rest or use special ability
+    levelUp() {}
     rest() {}
 }
 
 class Paladin extends Character {           // Once per Dungeon Level you
     constructor(name) {                     // may leave one Energy Dice in
         super(name);                        // place from last turn
-    }
-    useSpecialAbility() {
-        if(this.isAbilityUsed) {
-            return false;
-        }
-        else {
-            this.setAbilityUsed = true;
-        }
-        return true;
     }
 }
 
@@ -164,15 +165,6 @@ class Wizard extends Character {            // Once per Dungeon Level you
 class Ranger extends Character {            // Once per Dungeon Level you
     constructor(name) {                     // may assign a die to Range
         super(name);                        // instead of Speed
-    }
-    useSpecialAbility() {
-        if(this.isAbilityUsed) {
-            return false;
-        }
-        else {
-            this.setAbilityUsed = true;
-        }
-        return true;
     }
 }
 
@@ -218,15 +210,6 @@ class Rogue extends Character {             // Once per Dungeon Level
 class Knight extends Character {            // Once per Dungeon Level
     constructor(name) {                     // you may assign 2 Energy
         super(name);                        // dice of the same skill
-    }
-    useSpecialAbility() {
-        if(this.isAbilityUsed) {
-            return false;
-        }
-        else {
-            this.setAbilityUsed = true;
-        }
-        return true;
     }
 }
 
