@@ -4,8 +4,9 @@
         <li><a routerLink="/game" dataOnHover="=>Start"><span class="linkLabel">> Start</span></a></li>
         <li><a href="https://cdn.1j1ju.com/medias/10/4e/1e-one-card-dungeon-rulebook.pdf" target="_blank" dataOnHover="=>Rules"><span class="linkLabel">> Rules</span></a></li>
         <li><a routerLink="/ranking" dataOnHover="=>Ranking"><span class="linkLabel">> Ranking</span></a></li>
-        <li><a routerLink="/signin" dataOnHover="=>Sign in"><span class="linkLabel">> Sign in</span></a></li>
-        <li><a routerLink="/signup" dataOnHover="=>Sign up"><span class="linkLabel">> Sign up</span></a></li>
+        <li *ngIf="!isUserLoggedIn()"><a routerLink="/signin" dataOnHover="=>Sign in"><span class="linkLabel">> Sign in</span></a></li>
+        <li *ngIf="!isUserLoggedIn()"><a routerLink="/signup" dataOnHover="=>Sign up"><span class="linkLabel">> Sign up</span></a></li>
+        <li *ngIf="isUserLoggedIn()"><a (click)="logout()" routerLink="/home" dataOnHover="=>Log out"><span class="linkLabel">> Log out</span></a></li>
     </ul>
 </div>
 <router-outlet></router-outlet>

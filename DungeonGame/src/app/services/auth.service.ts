@@ -36,6 +36,12 @@ export class AuthService {
     return localStorage.getItem('auth_token');
   }
 
+  // Check if the user is logged in
+  isUserLoggedIn(): boolean {
+    const token = this.getToken();
+    return !!token;
+  }
+
   // Clear the JWT token from localStorage
   logout(): void {
     localStorage.removeItem('auth_token');

@@ -37,7 +37,9 @@ export class SignupComponent {
   // Handles form submission
   onSubmit(): void {
     if (this.password !== this.confirmPassword) {
-      alert('Passwords do not match!');
+      this.password = '';
+      this.confirmPassword = '';
+      this.snackbar.openSnackBar('Passwords don\'t match!');
       return;
     }
     this.authService.signup(this.email, this.nickname, this.password).subscribe({
