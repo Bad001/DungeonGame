@@ -36,6 +36,6 @@ Pull requests are welcome. For major changes, please open an issue first
 to discuss what you would like to change.
 
 ## Credits
-The assets and the idea of the mechanic's game came from [Little Rocket Games](https://www.littlerocketgames.com/product/one-card-dungeon/).
+The assets and ideas of the game mechanics come from [Little Rocket Games](https://www.littlerocketgames.com/product/one-card-dungeon/).
 > [!WARNING]
 > I'm not the creator of the game and I don't assume any responsibility about the improper use or deploy of this Software that I've Wrote.
