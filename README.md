@@ -39,3 +39,12 @@ to discuss what you would like to change.
 The assets and ideas of the game mechanics come from [Little Rocket Games](https://www.littlerocketgames.com/product/one-card-dungeon/).
 > [!WARNING]
 > I'm not the creator of the game and I don't assume any responsibility about the improper use or deploy of this Software that I've Wrote.
+
+## License
+
+The source code in this repository is released under the MIT License (see LICENSE).
+
+**This does not cover the game assets.** Artwork and game mechanics are the property of
+Little Rocket Games (One Card Dungeon) and are included here for educational purposes
+only, as part of a university coursework project. They are not licensed for reuse or
+redistribution. Remove or replace them before using this code in any other context.
